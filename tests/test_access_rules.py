@@ -155,6 +155,36 @@ class RefusalsAreInconclusive(unittest.TestCase):
                 self.assertEqual(res.outcome, INCONCLUSIVE, res.rule_id)
 
 
+class NaiveImplementationTripsTheTrap(unittest.TestCase):
+    """Executable proof that the benign look-alikes are load-bearing
+    (toolkit D-017's lesson: keep limitations in executable form). A naive
+    terminated-but-active check — joining active grants against the flat
+    termination report — false-positives on every rehire. If this test
+    ever fails, the clean population has stopped tempting anyone and
+    precision claims are hollow (D-004/D-009, lab D-008)."""
+
+    def test_flat_termination_join_false_positives_on_rehires(self):
+        ent = default_enterprise()
+        terminated_ids = {t["employee_id"]
+                          for t in ent["roster"]["terminations"]}
+        naive_fps = {
+            g["grant_id"] for g in ent["iam"]["grants"]
+            if g["status"] == "active" and g["account_type"] == "user"
+            and g["user_id"] in terminated_ids}
+        self.assertTrue(naive_fps,
+                        "the rehire trap has gone dead: a naive "
+                        "termination join no longer misfires")
+        # The real rule, on the same data, flags nothing.
+        res = results_by_id(ent)["ACC-TERM"]
+        self.assertEqual(len(res.findings), 0)
+        # And every naive false positive belongs to a rehired employee.
+        rehired = {e["employee_id"] for e in ent["roster"]["employees"]
+                   if any(ev["event"] == "rehire" for ev in e["history"])}
+        fp_users = {g["user_id"] for g in ent["iam"]["grants"]
+                    if g["grant_id"] in naive_fps}
+        self.assertEqual(fp_users, rehired)
+
+
 class ResultContract(unittest.TestCase):
     def test_results_are_deterministic_and_complete(self):
         a = [r.to_dict() for r in run_access_review(default_enterprise())]

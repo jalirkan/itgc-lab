@@ -123,3 +123,26 @@ with proper review, D-004 — must sit inside some rule's population and
 still not be flagged, or precision claims are hollow. Stale approved-but-
 undeployed tickets render explicitly as review leads, not control
 exceptions, and the rationale text says so.
+
+## D-014 · 2026-07-27 · Card definitions pinned; precision 1.0 must be earned, and is explained
+Report-card definitions live in one docstring, are restated in output, and
+are locked by a hand-computed test (per lab D-019): detected = any rule
+flags any constituent id (designed-rule recall alongside); precision is
+record-level on planted populations; FP rates come from clean populations
+where every flag is by construction false (D-009), per 10k records. Pools
+span seeds with per-seed rows shown; thin pools decide INCONCLUSIVE (lab
+D-020), and the default plan is sized so 5 seeds × 7 = 35 pooled is the
+smallest all-caught pool whose Wilson lower bound clears the 0.9 floor —
+one seed fewer and perfection is still inconclusive, asserted by test.
+
+Unlike the JE lab (lab D-020 reports precision 0.36 as a feature), correct
+ITGC rules SHOULD score precision 1.0 on this data: these are deterministic
+reconciliations, not fuzzy screens, and the clean world is consistent by
+construction. What keeps 1.0 from being hollow is that the benign
+look-alikes punish wrong implementations, not correct ones — a test runs a
+NAIVE flat-termination join against clean data and proves it false-positives
+on exactly the rehires (toolkit D-017: limitations kept in executable form).
+The card is also the regression detector (lab D-021): a test removes
+ACC-DORM and the dormant class drives to an exception while intact classes
+stay caught. No composite score; overall outcome by precedence (toolkit
+D-016). No wall-clock timestamps; identity is seeds + config echo.
