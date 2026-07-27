@@ -1,0 +1,24 @@
+{
+  "pairs": [
+    {
+      "a": "erp:ap-entry",
+      "b": "erp:ap-approve",
+      "conflict": "One identity can both create and approve a payable."
+    },
+    {
+      "a": "deploy:dev-commit",
+      "b": "deploy:deploy-approve",
+      "conflict": "One identity can both author a change and approve its release."
+    },
+    {
+      "a": "hris:payroll-run",
+      "b": "hris:hris-admin",
+      "conflict": "One identity can both execute payroll and alter payroll configuration."
+    },
+    {
+      "a": "erp:gl-post",
+      "b": "erp:erp-admin",
+      "conflict": "One identity can both post journal entries and alter ERP controls."
+    }
+  ]
+}

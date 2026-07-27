@@ -1,0 +1,15 @@
+{
+  "accounts-payable-clerk": ["erp:ap-entry"],
+  "financial-analyst": ["erp:fin-report"],
+  "controller": ["erp:ap-approve", "erp:fin-report", "erp:gl-post"],
+  "software-developer": ["deploy:dev-commit"],
+  "devops-engineer": ["deploy:deploy-exec", "deploy:dev-commit"],
+  "qa-analyst": ["deploy:deploy-approve"],
+  "system-administrator": ["crm:crm-admin", "deploy:deploy-admin", "erp:erp-admin", "hris:hris-admin"],
+  "service-desk-analyst": ["crm:crm-user"],
+  "security-analyst": ["crm:crm-user", "erp:fin-report"],
+  "hr-generalist": ["hris:hr-user"],
+  "payroll-specialist": ["hris:hr-user", "hris:payroll-run"],
+  "account-manager": ["crm:crm-user"],
+  "sales-operations-analyst": ["crm:crm-report", "crm:crm-user"]
+}

@@ -1,0 +1,25 @@
+{
+  "crm": {
+    "crm-user": {"privileged": false},
+    "crm-report": {"privileged": false},
+    "crm-admin": {"privileged": true}
+  },
+  "deploy": {
+    "dev-commit": {"privileged": false},
+    "deploy-approve": {"privileged": false},
+    "deploy-exec": {"privileged": true},
+    "deploy-admin": {"privileged": true}
+  },
+  "erp": {
+    "ap-entry": {"privileged": false},
+    "ap-approve": {"privileged": false},
+    "gl-post": {"privileged": false},
+    "fin-report": {"privileged": false},
+    "erp-admin": {"privileged": true}
+  },
+  "hris": {
+    "hr-user": {"privileged": false},
+    "payroll-run": {"privileged": true},
+    "hris-admin": {"privileged": true}
+  }
+}

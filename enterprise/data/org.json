@@ -1,0 +1,35 @@
+{
+  "departments": {
+    "Engineering": {
+      "weight": 30,
+      "functions": ["software-developer", "devops-engineer", "qa-analyst"]
+    },
+    "Finance": {
+      "weight": 20,
+      "functions": ["accounts-payable-clerk", "financial-analyst", "controller"]
+    },
+    "IT Operations": {
+      "weight": 15,
+      "functions": ["system-administrator", "service-desk-analyst", "security-analyst"]
+    },
+    "Human Resources": {
+      "weight": 10,
+      "functions": ["hr-generalist", "payroll-specialist"]
+    },
+    "Sales": {
+      "weight": 25,
+      "functions": ["account-manager", "sales-operations-analyst"]
+    }
+  },
+  "guaranteed_functions": {
+    "system-administrator": 2,
+    "qa-analyst": 2,
+    "controller": 1,
+    "security-analyst": 1,
+    "software-developer": 3,
+    "devops-engineer": 2,
+    "accounts-payable-clerk": 2,
+    "payroll-specialist": 1
+  },
+  "systems": ["crm", "deploy", "erp", "hris"]
+}
