@@ -110,3 +110,16 @@ Per lab D-019 (pair originals count as planted), a manifest entry now
 carries ALL constituent record ids — for SoD, the added grant plus the
 counterpart half — with `added_grant_id` kept separately for provenance.
 Ground truth describes the violation, not the edit.
+
+## D-013 · 2026-07-27 · Emergency semantics are split across two rules
+"Approved after deployment" is the EXPECTED shape of an emergency change,
+and the same shape is a deficiency for a normal one — so CHG-APPR flags
+absent approval for everything but post-dated approval only for
+non-emergencies, while CHG-EMER owns the emergency-specific criterion
+(post-hoc review present, timely, and not by the developer). This is the
+same scoping lesson as lab D-012 (period-end means the reporting period,
+not every month-end): the documented benign pressure — weekend emergencies
+with proper review, D-004 — must sit inside some rule's population and
+still not be flagged, or precision claims are hollow. Stale approved-but-
+undeployed tickets render explicitly as review leads, not control
+exceptions, and the rationale text says so.
