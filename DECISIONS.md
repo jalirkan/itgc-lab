@@ -73,3 +73,40 @@ planted data (per lab D-010's property tests), and the same predicates must
 find ZERO records in clean data, next to the benign look-alikes that sit
 deliberately adjacent (D-004). That zero base rate is what makes Phase 3
 precision numbers attributable to rules, not to generator noise.
+
+## D-010 · 2026-07-27 · Stats core: Wilson from the formula, attribute rule at both poles
+Implements D-005 structurally (per toolkit D-008/D-011/D-012, lab D-015):
+`Measurement.proportion()` is the only constructor and refuses to exist
+without interval, method, confidence, and n; `render()` always includes n;
+n=0 renders "not tested", never "0%"; boundary counts pin their bound to
+exactly 0.0 or 1.0. z comes from `statistics.NormalDist.inv_cdf`, computed,
+not transcribed (lab D-005's formulas-not-tables), and pinned by test.
+`decide()` compares the interval to the threshold with three outcomes;
+`min_sample` gates only the pass. The zero-tolerance switch to attribute
+sampling applies at BOTH poles — threshold 0.0 when lower is better and
+1.0 when higher is better — because a perfection floor on recall has the
+same pathology toolkit D-012 fixed for leak rates: no finite sample's
+Wilson interval reaches the boundary.
+
+## D-011 · 2026-07-27 · One rule base owns the outcome logic
+`core/rules.py` gives both engines the same contract: a rule declares its
+population, criterion, limitations, required thresholds, and the planted
+classes it is designed for; the base class computes the outcome, so no rule
+can invent a fourth outcome or turn a refusal into a pass. Census framing
+throughout (lab D-014, toolkit D-031): findings are exact facts about a
+fully-examined population, with population_n on the result. Refusal cases —
+missing threshold (per toolkit D-020: missing config means refuse, not
+default), empty population (nothing examined is not evidence the control
+operated), absent artifact — all render inconclusive with the reason
+recorded. The rehire trap is tested from the roster's own termination
+report: ACC-TERM evaluates the LATEST stint, and a test asserts rehired
+employees are never among its subjects.
+
+## D-012 · 2026-07-27 · The manifest names every constituent record
+Found by the first precision test: the SoD rule correctly implicates both
+grants of a toxic pair, but the manifest initially listed only the added
+one, which would have graded the pre-existing half as a false positive.
+Per lab D-019 (pair originals count as planted), a manifest entry now
+carries ALL constituent record ids — for SoD, the added grant plus the
+counterpart half — with `added_grant_id` kept separately for provenance.
+Ground truth describes the violation, not the edit.

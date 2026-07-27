@@ -291,12 +291,22 @@ def _plant_sod_conflict(ctx):
                 pool.append((eid, p["a"], p))
     eid, missing, pair = _pick(ctx.rng, pool, "access.sod_conflict",
                                "employees holding one side of a toxic pair")
+    held_half = pair["a"] if missing == pair["b"] else pair["b"]
     g = _add_role_grant(ctx, eid, missing, seq=80)
+    # The violation is the PAIR: the manifest names every constituent
+    # grant, so flagging the pre-existing half is correct detection, not a
+    # false positive (per lab D-019's pair-originals rule).
+    counterpart_ids = sorted(
+        x["grant_id"] for x in ctx.grants
+        if x["user_id"] == eid and x["status"] == "active"
+        and "{0}:{1}".format(x["system"], x["role"]) == held_half)
     return {
-        "refs": {"grant_ids": [g["grant_id"]], "user_id": eid},
-        "note": "Planted: grant completes the toxic combination {0} + {1} "
-                "({2}) The added role is typically also outside the "
-                "holder's matrix; designed detector is the SoD rule.".format(
+        "refs": {"grant_ids": sorted([g["grant_id"]] + counterpart_ids),
+                 "added_grant_id": g["grant_id"], "user_id": eid},
+        "note": "Planted: added grant completes the toxic combination "
+                "{0} + {1} ({2}) Constituent ids include the pre-existing "
+                "half; the added role is typically also outside the "
+                "holder's matrix. Designed detector: the SoD rule.".format(
                     pair["a"], pair["b"], pair["conflict"]),
     }
 
