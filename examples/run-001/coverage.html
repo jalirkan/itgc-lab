@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>Framework coverage</title>
+<style>
+body { font-family: Georgia, 'Times New Roman', serif; margin: 2rem auto;
+       max-width: 60rem; color: rgb(25, 30, 35); line-height: 1.45; }
+h1 { font-size: 1.6rem; border-bottom: 2px solid rgb(25, 30, 35);
+     padding-bottom: 0.4rem; }
+h2 { font-size: 1.15rem; margin-top: 1.6rem; }
+p.subtitle { color: rgb(90, 96, 102); font-style: italic; }
+table { border-collapse: collapse; margin: 0.6rem 0; }
+th, td { border: 1px solid rgb(170, 175, 180); padding: 0.3rem 0.55rem;
+         text-align: left; vertical-align: top; font-size: 0.92rem; }
+th { background: rgb(238, 240, 242); }
+blockquote { border-left: 4px solid rgb(170, 175, 180); margin: 0.6rem 0;
+             padding: 0.2rem 0.8rem; color: rgb(90, 96, 102); }
+dl { margin: 0.4rem 0; }
+dt { font-weight: bold; }
+dd { margin: 0 0 0.35rem 1.2rem; }
+</style>
+</head><body>
+<h1>Framework coverage</h1>
+<p class="subtitle">What this run evidenced, control by control</p>
+<h2>Reading notes</h2>
+<blockquote>These catalogs list only controls this lab can produce technical evidence for. A control&#x27;s absence is not a statement about it.</blockquote>
+<blockquote>A mapping asserts that the rule produces evidence RELEVANT to the control - never that the control is satisfied. Every mapping carries its rationale; an unargued mapping cannot be defended in review.</blockquote>
+<h2>Controls</h2>
+<table><thead><tr>
+<th>Control</th>
+<th>Original summary</th>
+<th>Status</th>
+<th>Mapped rules (outcome)</th>
+</tr></thead><tbody>
+<tr><td>cobit-2019:BAI06.01</td><td>Change requests are evaluated and authorized before implementation, at arm&#x27;s length from the implementer.</td><td>tested-with-exceptions</td><td>CHG-APPR (exception); CHG-FRZ (exception); CHG-SELF (exception)</td></tr>
+<tr><td>cobit-2019:BAI06.02</td><td>Emergency changes take an expedited path whose authorization and review complete promptly after the fact.</td><td>tested-with-exceptions</td><td>CHG-EMER (exception)</td></tr>
+<tr><td>cobit-2019:BAI06.03</td><td>Change status is tracked and reported through closure so no request quietly stalls or disappears.</td><td>tested-with-exceptions</td><td>CHG-STAL (exception); CHG-TICK (exception)</td></tr>
+<tr><td>cobit-2019:DSS05.04</td><td>User identities and logical access are managed across their lifecycle so every account traces to a live business need.</td><td>tested-with-exceptions</td><td>ACC-CERT (exception); ACC-DORM (exception); ACC-ORPH (exception); ACC-SVC (exception); ACC-TERM (exception)</td></tr>
+<tr><td>cobit-2019:DSS06.03</td><td>Roles, access privileges, and authority levels stay aligned with assigned duties and their required separations.</td><td>tested-with-exceptions</td><td>ACC-AUTH (exception); ACC-SOD (exception)</td></tr>
+<tr><td>iso-27001-2022:A.5.16</td><td>Identities are unique, tied to a person or a sanctioned non-human use, and retired when no longer needed.</td><td>tested-with-exceptions</td><td>ACC-ORPH (exception); ACC-SVC (exception)</td></tr>
+<tr><td>iso-27001-2022:A.5.18</td><td>Access rights are provisioned on business need and removed or adjusted promptly at termination or role change.</td><td>tested-with-exceptions</td><td>ACC-AUTH (exception); ACC-CERT (exception); ACC-TERM (exception)</td></tr>
+<tr><td>iso-27001-2022:A.5.3</td><td>Conflicting duties are separated so no single identity can initiate, approve, and conceal the same transaction or change.</td><td>tested-with-exceptions</td><td>ACC-SOD (exception); CHG-SELF (exception)</td></tr>
+<tr><td>iso-27001-2022:A.6.5</td><td>Duties that survive termination or role change are defined and enforced, including the removal of what should not survive.</td><td>tested-with-exceptions</td><td>ACC-TERM (exception)</td></tr>
+<tr><td>iso-27001-2022:A.8.2</td><td>Privileged rights are restricted, individually justified, and reviewed more often than ordinary access.</td><td>tested-with-exceptions</td><td>ACC-DORM (exception)</td></tr>
+<tr><td>iso-27001-2022:A.8.32</td><td>System changes follow a controlled path: recorded request, arm&#x27;s-length approval, and traceable deployment.</td><td>tested-with-exceptions</td><td>CHG-APPR (exception); CHG-EMER (exception); CHG-FRZ (exception); CHG-SELF (exception); CHG-STAL (exception); CHG-TICK (exception)</td></tr>
+<tr><td>nist-csf-2.0:PR.AA-01</td><td>Identities and credentials for users, services, and hardware are issued, managed, and revoked by the organization.</td><td>tested-with-exceptions</td><td>ACC-ORPH (exception); ACC-SVC (exception); ACC-TERM (exception)</td></tr>
+<tr><td>nist-csf-2.0:PR.AA-05</td><td>Access permissions are policy-defined, enforced, and reviewed, incorporating least privilege and separation of duties.</td><td>tested-with-exceptions</td><td>ACC-AUTH (exception); ACC-CERT (exception); ACC-DORM (exception); ACC-SOD (exception); CHG-SELF (exception)</td></tr>
+<tr><td>nist-csf-2.0:PR.PS-01</td><td>Configuration management practices are established and applied so platforms stay in known, approved states.</td><td>tested-with-exceptions</td><td>CHG-APPR (exception); CHG-EMER (exception); CHG-FRZ (exception); CHG-STAL (exception); CHG-TICK (exception)</td></tr>
+</tbody></table>
+<h2>Cataloged controls with no mapped rule</h2>
+<p>Every cataloged control is mapped by at least one rule.</p>
+</body></html>

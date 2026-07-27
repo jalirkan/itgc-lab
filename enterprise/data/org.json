@@ -31,5 +31,5 @@
     "accounts-payable-clerk": 2,
     "payroll-specialist": 1
   },
-  "systems": ["crm", "deploy", "erp", "hris"]
+  "systems": ["crm", "deploy", "dir", "erp", "hris", "mail"]
 }

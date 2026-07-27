@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>Workpaper ACC-DORM — Dormant privileged access</title>
+<style>
+body { font-family: Georgia, 'Times New Roman', serif; margin: 2rem auto;
+       max-width: 60rem; color: rgb(25, 30, 35); line-height: 1.45; }
+h1 { font-size: 1.6rem; border-bottom: 2px solid rgb(25, 30, 35);
+     padding-bottom: 0.4rem; }
+h2 { font-size: 1.15rem; margin-top: 1.6rem; }
+p.subtitle { color: rgb(90, 96, 102); font-style: italic; }
+table { border-collapse: collapse; margin: 0.6rem 0; }
+th, td { border: 1px solid rgb(170, 175, 180); padding: 0.3rem 0.55rem;
+         text-align: left; vertical-align: top; font-size: 0.92rem; }
+th { background: rgb(238, 240, 242); }
+blockquote { border-left: 4px solid rgb(170, 175, 180); margin: 0.6rem 0;
+             padding: 0.2rem 0.8rem; color: rgb(90, 96, 102); }
+dl { margin: 0.4rem 0; }
+dt { font-weight: bold; }
+dd { margin: 0 0 0.35rem 1.2rem; }
+</style>
+</head><body>
+<h1>Workpaper ACC-DORM — Dormant privileged access</h1>
+<p class="subtitle">Outcome: exception</p>
+<h2>Identity</h2>
+<dl>
+<dt>Enterprise seed</dt><dd>run-001</dd>
+<dt>Snapshot</dt><dd>2026-06-30</dd>
+<dt>Window start</dt><dd>2024-12-30</dd>
+<dt>Generator version</dt><dd>0.1.0</dd>
+<dt>Workpaper generator</dt><dd>itgc-lab 0.1.0</dd>
+<dt>Rule</dt><dd>ACC-DORM</dd>
+<dt>Outcome</dt><dd>exception</dd>
+</dl>
+<h2>Objective and criterion</h2>
+<p>A privileged grant is a lead when its last recorded use is older than the dormancy threshold, or when no use is recorded at all.</p>
+<h2>Population</h2>
+<p>All active grants carrying a privileged role, across user, service, and shared accounts (complete examination).</p>
+<p>Records examined: 2656 of 2656.</p>
+<blockquote>Each procedure examines 100 percent of its declared population as of the snapshot. Counts are census facts about this population, not sample estimates, and are always stated with the population size.</blockquote>
+<h2>Policy thresholds applied</h2>
+<dl>
+<dt>dormant_privileged_days</dt><dd>90</dd>
+</dl>
+<h2>Results of examination</h2>
+<p>4 lead(s) raised from 2656 records examined.</p>
+<table><thead><tr>
+<th>Subject</th>
+<th>Record id(s)</th>
+<th>Rationale</th>
+</tr></thead><tbody>
+<tr><td>E-a740855567</td><td>G-6076dfc7c7</td><td>Privileged role deploy-admin on deploy last used 205 days before the snapshot; the dormancy threshold is 90 days.</td></tr>
+<tr><td>E-5caca08854</td><td>G-764630f184</td><td>Privileged role deploy-admin on deploy last used 166 days before the snapshot; the dormancy threshold is 90 days.</td></tr>
+<tr><td>E-80715e244e</td><td>G-8a9c08bbcf</td><td>Privileged role deploy-exec on deploy last used 163 days before the snapshot; the dormancy threshold is 90 days.</td></tr>
+<tr><td>E-09fd54a051</td><td>G-9f54f965ba</td><td>Privileged role deploy-admin on deploy last used 185 days before the snapshot; the dormancy threshold is 90 days.</td></tr>
+</tbody></table>
+<h2>Limitations</h2>
+<ul>
+<li>Last-used dates come from the IAM export, not from authentication logs; usage the export does not capture is invisible.</li>
+<li>Dormancy is a staleness screen: legitimate break-glass access can be dormant by design, which is a matter for the reviewer.</li>
+</ul>
+<h2>Framework references</h2>
+<blockquote>References indicate that this procedure produces evidence RELEVANT to the control. They never assert the control is satisfied.</blockquote>
+<table><thead><tr>
+<th>Control</th>
+<th>Original summary</th>
+<th>Relevance</th>
+</tr></thead><tbody>
+<tr><td>iso-27001-2022:A.8.2</td><td>Privileged rights are restricted, individually justified, and reviewed more often than ordinary access.</td><td>Privileged rights unused past the threshold evidence whether privileged allocation is justified and reviewed.</td></tr>
+<tr><td>cobit-2019:DSS05.04</td><td>User identities and logical access are managed across their lifecycle so every account traces to a live business need.</td><td>Dormant privileged access is lifecycle debt: granted, retained, and unaccounted for in current need.</td></tr>
+<tr><td>nist-csf-2.0:PR.AA-05</td><td>Access permissions are policy-defined, enforced, and reviewed, incorporating least privilege and separation of duties.</td><td>Least privilege implies privileged rights that are actually exercised or removed on review.</td></tr>
+</tbody></table>
+<h2>Certification study tags</h2>
+<ul>
+<li>CISA D5-A: Identity and Access Management</li>
+</ul>
+</body></html>

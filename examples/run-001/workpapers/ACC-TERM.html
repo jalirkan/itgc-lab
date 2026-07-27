@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>Workpaper ACC-TERM — Terminated employees with active access</title>
+<style>
+body { font-family: Georgia, 'Times New Roman', serif; margin: 2rem auto;
+       max-width: 60rem; color: rgb(25, 30, 35); line-height: 1.45; }
+h1 { font-size: 1.6rem; border-bottom: 2px solid rgb(25, 30, 35);
+     padding-bottom: 0.4rem; }
+h2 { font-size: 1.15rem; margin-top: 1.6rem; }
+p.subtitle { color: rgb(90, 96, 102); font-style: italic; }
+table { border-collapse: collapse; margin: 0.6rem 0; }
+th, td { border: 1px solid rgb(170, 175, 180); padding: 0.3rem 0.55rem;
+         text-align: left; vertical-align: top; font-size: 0.92rem; }
+th { background: rgb(238, 240, 242); }
+blockquote { border-left: 4px solid rgb(170, 175, 180); margin: 0.6rem 0;
+             padding: 0.2rem 0.8rem; color: rgb(90, 96, 102); }
+dl { margin: 0.4rem 0; }
+dt { font-weight: bold; }
+dd { margin: 0 0 0.35rem 1.2rem; }
+</style>
+</head><body>
+<h1>Workpaper ACC-TERM — Terminated employees with active access</h1>
+<p class="subtitle">Outcome: exception</p>
+<h2>Identity</h2>
+<dl>
+<dt>Enterprise seed</dt><dd>run-001</dd>
+<dt>Snapshot</dt><dd>2026-06-30</dd>
+<dt>Window start</dt><dd>2024-12-30</dd>
+<dt>Generator version</dt><dd>0.1.0</dd>
+<dt>Workpaper generator</dt><dd>itgc-lab 0.1.0</dd>
+<dt>Rule</dt><dd>ACC-TERM</dd>
+<dt>Outcome</dt><dd>exception</dd>
+</dl>
+<h2>Objective and criterion</h2>
+<p>An account is a lead when its holder&#x27;s latest employment stint ended in termination more than the grace period before the snapshot and the grant is still active.</p>
+<h2>Population</h2>
+<p>All active user-account grants held by employees present in the HR roster, as of the snapshot (complete examination, no sampling).</p>
+<p>Records examined: 20221 of 20221.</p>
+<blockquote>Each procedure examines 100 percent of its declared population as of the snapshot. Counts are census facts about this population, not sample estimates, and are always stated with the population size.</blockquote>
+<h2>Policy thresholds applied</h2>
+<dl>
+<dt>termination_grace_days</dt><dd>3</dd>
+</dl>
+<h2>Results of examination</h2>
+<p>4 lead(s) raised from 20221 records examined.</p>
+<table><thead><tr>
+<th>Subject</th>
+<th>Record id(s)</th>
+<th>Rationale</th>
+</tr></thead><tbody>
+<tr><td>E-e6aadc30ba</td><td>G-043abfeac3</td><td>Account remains active 246 days after the 2025-10-27 termination; the disablement SLA is 3 days.</td></tr>
+<tr><td>E-64cd70eb1b</td><td>G-046c4d451a</td><td>Account remains active 53 days after the 2026-05-08 termination; the disablement SLA is 3 days.</td></tr>
+<tr><td>E-fd59020e69</td><td>G-06f49ee78c</td><td>Account remains active 128 days after the 2026-02-22 termination; the disablement SLA is 3 days.</td></tr>
+<tr><td>E-1baf5fa6ac</td><td>G-1bcde552c0</td><td>Account remains active 240 days after the 2025-11-02 termination; the disablement SLA is 3 days.</td></tr>
+</tbody></table>
+<h2>Limitations</h2>
+<ul>
+<li>Relies on roster completeness: a termination missing from HR data is invisible to this reconciliation.</li>
+<li>Evaluates the latest employment stint, so rehired employees are not flagged for earlier terminations; a data feed that drops rehire events would change results.</li>
+<li>Grant status is taken from the IAM export; actual authentication activity is not examined.</li>
+</ul>
+<h2>Framework references</h2>
+<blockquote>References indicate that this procedure produces evidence RELEVANT to the control. They never assert the control is satisfied.</blockquote>
+<table><thead><tr>
+<th>Control</th>
+<th>Original summary</th>
+<th>Relevance</th>
+</tr></thead><tbody>
+<tr><td>iso-27001-2022:A.5.18</td><td>Access rights are provisioned on business need and removed or adjusted promptly at termination or role change.</td><td>Reconciles active grants against roster terminations, evidencing whether rights are removed when employment ends.</td></tr>
+<tr><td>iso-27001-2022:A.6.5</td><td>Duties that survive termination or role change are defined and enforced, including the removal of what should not survive.</td><td>Access persisting past termination is the technical residue the post-employment duties in this control govern.</td></tr>
+<tr><td>cobit-2019:DSS05.04</td><td>User identities and logical access are managed across their lifecycle so every account traces to a live business need.</td><td>Lifecycle evidence: accounts of departed users should leave the active population within the disablement SLA.</td></tr>
+<tr><td>nist-csf-2.0:PR.AA-01</td><td>Identities and credentials for users, services, and hardware are issued, managed, and revoked by the organization.</td><td>Tests the revocation half of identity lifecycle management against the authoritative roster.</td></tr>
+</tbody></table>
+<h2>Certification study tags</h2>
+<ul>
+<li>CISA D5-A: Identity and Access Management</li>
+</ul>
+</body></html>

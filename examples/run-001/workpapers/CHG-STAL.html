@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>Workpaper CHG-STAL — Approved changes never deployed</title>
+<style>
+body { font-family: Georgia, 'Times New Roman', serif; margin: 2rem auto;
+       max-width: 60rem; color: rgb(25, 30, 35); line-height: 1.45; }
+h1 { font-size: 1.6rem; border-bottom: 2px solid rgb(25, 30, 35);
+     padding-bottom: 0.4rem; }
+h2 { font-size: 1.15rem; margin-top: 1.6rem; }
+p.subtitle { color: rgb(90, 96, 102); font-style: italic; }
+table { border-collapse: collapse; margin: 0.6rem 0; }
+th, td { border: 1px solid rgb(170, 175, 180); padding: 0.3rem 0.55rem;
+         text-align: left; vertical-align: top; font-size: 0.92rem; }
+th { background: rgb(238, 240, 242); }
+blockquote { border-left: 4px solid rgb(170, 175, 180); margin: 0.6rem 0;
+             padding: 0.2rem 0.8rem; color: rgb(90, 96, 102); }
+dl { margin: 0.4rem 0; }
+dt { font-weight: bold; }
+dd { margin: 0 0 0.35rem 1.2rem; }
+</style>
+</head><body>
+<h1>Workpaper CHG-STAL — Approved changes never deployed</h1>
+<p class="subtitle">Outcome: exception</p>
+<h2>Identity</h2>
+<dl>
+<dt>Enterprise seed</dt><dd>run-001</dd>
+<dt>Snapshot</dt><dd>2026-06-30</dd>
+<dt>Window start</dt><dd>2024-12-30</dd>
+<dt>Generator version</dt><dd>0.1.0</dd>
+<dt>Workpaper generator</dt><dd>itgc-lab 0.1.0</dd>
+<dt>Rule</dt><dd>CHG-STAL</dd>
+<dt>Outcome</dt><dd>exception</dd>
+</dl>
+<h2>Objective and criterion</h2>
+<p>An approved, undeployed ticket is a REVIEW LEAD — a recordkeeping question, not by itself an exception — once its approval is older than the staleness threshold.</p>
+<h2>Population</h2>
+<p>All change tickets with an approval recorded and no matching deploy-log entry (complete examination).</p>
+<p>Records examined: 8 of 8.</p>
+<blockquote>Each procedure examines 100 percent of its declared population as of the snapshot. Counts are census facts about this population, not sample estimates, and are always stated with the population size.</blockquote>
+<h2>Policy thresholds applied</h2>
+<dl>
+<dt>stale_ticket_days</dt><dd>30</dd>
+</dl>
+<h2>Results of examination</h2>
+<p>4 lead(s) raised from 8 records examined.</p>
+<table><thead><tr>
+<th>Subject</th>
+<th>Record id(s)</th>
+<th>Rationale</th>
+</tr></thead><tbody>
+<tr><td>CHG-2b5240978b</td><td>CHG-2b5240978b</td><td>Change CHG-2b5240978b on deploy was approved 77 days before the snapshot and has no deployment record; the staleness threshold is 30 days. Review lead: confirm disposition with the change owner.</td></tr>
+<tr><td>CHG-73e125d3eb</td><td>CHG-73e125d3eb</td><td>Change CHG-73e125d3eb on crm was approved 80 days before the snapshot and has no deployment record; the staleness threshold is 30 days. Review lead: confirm disposition with the change owner.</td></tr>
+<tr><td>CHG-a12d70ff62</td><td>CHG-a12d70ff62</td><td>Change CHG-a12d70ff62 on hris was approved 83 days before the snapshot and has no deployment record; the staleness threshold is 30 days. Review lead: confirm disposition with the change owner.</td></tr>
+<tr><td>CHG-dc0736bb81</td><td>CHG-dc0736bb81</td><td>Change CHG-dc0736bb81 on hris was approved 60 days before the snapshot and has no deployment record; the staleness threshold is 30 days. Review lead: confirm disposition with the change owner.</td></tr>
+</tbody></table>
+<h2>Limitations</h2>
+<ul>
+<li>An aged open ticket may be legitimately deferred work; this rule measures recordkeeping hygiene, and the lead sheet carries it as a review item rather than an exception to a control.</li>
+</ul>
+<h2>Framework references</h2>
+<blockquote>References indicate that this procedure produces evidence RELEVANT to the control. They never assert the control is satisfied.</blockquote>
+<table><thead><tr>
+<th>Control</th>
+<th>Original summary</th>
+<th>Relevance</th>
+</tr></thead><tbody>
+<tr><td>iso-27001-2022:A.8.32</td><td>System changes follow a controlled path: recorded request, arm&#x27;s-length approval, and traceable deployment.</td><td>Approved-but-undeployed tickets aged past threshold evidence recordkeeping drift in the change pipeline.</td></tr>
+<tr><td>cobit-2019:BAI06.03</td><td>Change status is tracked and reported through closure so no request quietly stalls or disappears.</td><td>Tracking through closure is the practice tested; a stalled approved ticket is an untracked ending.</td></tr>
+<tr><td>nist-csf-2.0:PR.PS-01</td><td>Configuration management practices are established and applied so platforms stay in known, approved states.</td><td>Applied practice keeps the recorded pipeline and reality reconciled; stale approvals measure the gap.</td></tr>
+</tbody></table>
+<h2>Certification study tags</h2>
+<ul>
+<li>CISA D4-A: IT Change, Configuration, and Patch Management</li>
+</ul>
+</body></html>

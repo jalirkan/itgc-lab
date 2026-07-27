@@ -205,3 +205,25 @@ reworded — which is the guard working, recorded here so nobody weakens
 it to admit convenient phrasing later. Findings and scope limitations
 render in separate lead-sheet sections (toolkit D-032), and workpapers
 carry no wall-clock timestamps (lab D-019).
+
+## D-018 · 2026-07-27 · The example regenerates; its README is written by code
+`python cli.py example` rebuilds examples/run-001 in independent stages
+(generate → review → card → continuous → readme), with the example's
+parameters living in cli.py as code. Bulk exports (~11 MB) are gitignored
+— pure functions of the seed — while the manifest, findings, workpaper
+pack, card, continuous artifacts, and the run README stay committed. Two
+tests keep the committed artifacts honest (per lab D-026 and toolkit
+D-034): the manifest must regenerate byte-identically from the example
+parameters, and the run README's figures must match the artifacts it
+describes, because that README is GENERATED from them, never hand-typed.
+
+Scale notes, recorded rather than fudged: PLAN estimated "~40,000 grants"
+at 5,000 employees; the coherent org this generator produces yields
+23,545 (after adding directory and mail as universal systems for
+realism). The README states actuals. The card grades rules on
+standard-size populations across 5 seeds — 7 per class, giving the
+35-pooled minimum from D-014 — while the large enterprise demonstrates
+the same engines at scale in one committed run. Injector pool
+construction was made index-backed after the 5,000-employee run exposed
+an O(employees × grants) scan; selection order is unchanged and the
+whole suite plus byte-identity tests pin that.

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>Workpaper CHG-EMER — Emergency changes without timely post-hoc review</title>
+<style>
+body { font-family: Georgia, 'Times New Roman', serif; margin: 2rem auto;
+       max-width: 60rem; color: rgb(25, 30, 35); line-height: 1.45; }
+h1 { font-size: 1.6rem; border-bottom: 2px solid rgb(25, 30, 35);
+     padding-bottom: 0.4rem; }
+h2 { font-size: 1.15rem; margin-top: 1.6rem; }
+p.subtitle { color: rgb(90, 96, 102); font-style: italic; }
+table { border-collapse: collapse; margin: 0.6rem 0; }
+th, td { border: 1px solid rgb(170, 175, 180); padding: 0.3rem 0.55rem;
+         text-align: left; vertical-align: top; font-size: 0.92rem; }
+th { background: rgb(238, 240, 242); }
+blockquote { border-left: 4px solid rgb(170, 175, 180); margin: 0.6rem 0;
+             padding: 0.2rem 0.8rem; color: rgb(90, 96, 102); }
+dl { margin: 0.4rem 0; }
+dt { font-weight: bold; }
+dd { margin: 0 0 0.35rem 1.2rem; }
+</style>
+</head><body>
+<h1>Workpaper CHG-EMER — Emergency changes without timely post-hoc review</h1>
+<p class="subtitle">Outcome: exception</p>
+<h2>Identity</h2>
+<dl>
+<dt>Enterprise seed</dt><dd>run-001</dd>
+<dt>Snapshot</dt><dd>2026-06-30</dd>
+<dt>Window start</dt><dd>2024-12-30</dd>
+<dt>Generator version</dt><dd>0.1.0</dd>
+<dt>Workpaper generator</dt><dd>itgc-lab 0.1.0</dd>
+<dt>Rule</dt><dd>CHG-EMER</dd>
+<dt>Outcome</dt><dd>exception</dd>
+</dl>
+<h2>Objective and criterion</h2>
+<p>A deployed emergency change is a lead when no post-hoc review is recorded, when the review falls outside the SLA window after deployment, or when the reviewer is the developer.</p>
+<h2>Population</h2>
+<p>All emergency change tickets with a matching deploy-log entry (complete examination).</p>
+<p>Records examined: 7 of 7.</p>
+<blockquote>Each procedure examines 100 percent of its declared population as of the snapshot. Counts are census facts about this population, not sample estimates, and are always stated with the population size.</blockquote>
+<h2>Policy thresholds applied</h2>
+<dl>
+<dt>emergency_review_days</dt><dd>5</dd>
+</dl>
+<h2>Results of examination</h2>
+<p>4 lead(s) raised from 7 records examined.</p>
+<table><thead><tr>
+<th>Subject</th>
+<th>Record id(s)</th>
+<th>Rationale</th>
+</tr></thead><tbody>
+<tr><td>CHG-27625fa5a6</td><td>CHG-27625fa5a6, DPL-d40b3c0cf3</td><td>Emergency change CHG-27625fa5a6 on crm was deployed 2026-03-28, and no post-hoc review is recorded within the 5-day window.</td></tr>
+<tr><td>CHG-cc5bce6c47</td><td>CHG-cc5bce6c47, DPL-ad99256c8d</td><td>Emergency change CHG-cc5bce6c47 on crm was deployed 2026-01-24, and no post-hoc review is recorded within the 5-day window.</td></tr>
+<tr><td>CHG-e32c950179</td><td>CHG-e32c950179, DPL-db3abcdee3</td><td>Emergency change CHG-e32c950179 on deploy was deployed 2025-01-18, and no post-hoc review is recorded within the 5-day window.</td></tr>
+<tr><td>CHG-eb027dc2ea</td><td>CHG-eb027dc2ea, DPL-2962a916b6</td><td>Emergency change CHG-eb027dc2ea on erp was deployed 2025-05-10, and no post-hoc review is recorded within the 5-day window.</td></tr>
+</tbody></table>
+<h2>Limitations</h2>
+<ul>
+<li>The review is evidenced by two ticket fields; its substance is not examined.</li>
+<li>Properly-reviewed emergencies deployed on weekends are expected and are not leads.</li>
+</ul>
+<h2>Framework references</h2>
+<blockquote>References indicate that this procedure produces evidence RELEVANT to the control. They never assert the control is satisfied.</blockquote>
+<table><thead><tr>
+<th>Control</th>
+<th>Original summary</th>
+<th>Relevance</th>
+</tr></thead><tbody>
+<tr><td>iso-27001-2022:A.8.32</td><td>System changes follow a controlled path: recorded request, arm&#x27;s-length approval, and traceable deployment.</td><td>Expedited changes remain inside the controlled path only if reviewed promptly after the fact.</td></tr>
+<tr><td>cobit-2019:BAI06.02</td><td>Emergency changes take an expedited path whose authorization and review complete promptly after the fact.</td><td>The emergency-change practice is tested directly: post-hoc review present, timely, and independent.</td></tr>
+<tr><td>nist-csf-2.0:PR.PS-01</td><td>Configuration management practices are established and applied so platforms stay in known, approved states.</td><td>Emergency paths are part of applied configuration management practice, not an exemption from it.</td></tr>
+</tbody></table>
+<h2>Certification study tags</h2>
+<ul>
+<li>CISA D4-A: IT Change, Configuration, and Patch Management</li>
+</ul>
+</body></html>

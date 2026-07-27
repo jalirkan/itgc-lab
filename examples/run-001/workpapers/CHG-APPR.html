@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>Workpaper CHG-APPR — Deployed changes without approval</title>
+<style>
+body { font-family: Georgia, 'Times New Roman', serif; margin: 2rem auto;
+       max-width: 60rem; color: rgb(25, 30, 35); line-height: 1.45; }
+h1 { font-size: 1.6rem; border-bottom: 2px solid rgb(25, 30, 35);
+     padding-bottom: 0.4rem; }
+h2 { font-size: 1.15rem; margin-top: 1.6rem; }
+p.subtitle { color: rgb(90, 96, 102); font-style: italic; }
+table { border-collapse: collapse; margin: 0.6rem 0; }
+th, td { border: 1px solid rgb(170, 175, 180); padding: 0.3rem 0.55rem;
+         text-align: left; vertical-align: top; font-size: 0.92rem; }
+th { background: rgb(238, 240, 242); }
+blockquote { border-left: 4px solid rgb(170, 175, 180); margin: 0.6rem 0;
+             padding: 0.2rem 0.8rem; color: rgb(90, 96, 102); }
+dl { margin: 0.4rem 0; }
+dt { font-weight: bold; }
+dd { margin: 0 0 0.35rem 1.2rem; }
+</style>
+</head><body>
+<h1>Workpaper CHG-APPR — Deployed changes without approval</h1>
+<p class="subtitle">Outcome: exception</p>
+<h2>Identity</h2>
+<dl>
+<dt>Enterprise seed</dt><dd>run-001</dd>
+<dt>Snapshot</dt><dd>2026-06-30</dd>
+<dt>Window start</dt><dd>2024-12-30</dd>
+<dt>Generator version</dt><dd>0.1.0</dd>
+<dt>Workpaper generator</dt><dd>itgc-lab 0.1.0</dd>
+<dt>Rule</dt><dd>CHG-APPR</dd>
+<dt>Outcome</dt><dd>exception</dd>
+</dl>
+<h2>Objective and criterion</h2>
+<p>A deployed change is a lead when no approval is recorded at all, or — for non-emergency changes — when the recorded approval postdates the deployment.</p>
+<h2>Population</h2>
+<p>All change tickets with at least one matching deploy-log entry (complete examination).</p>
+<p>Records examined: 695 of 695.</p>
+<blockquote>Each procedure examines 100 percent of its declared population as of the snapshot. Counts are census facts about this population, not sample estimates, and are always stated with the population size.</blockquote>
+<h2>Policy thresholds applied</h2>
+<p>This procedure uses no policy thresholds.</p>
+<h2>Results of examination</h2>
+<p>4 lead(s) raised from 695 records examined.</p>
+<table><thead><tr>
+<th>Subject</th>
+<th>Record id(s)</th>
+<th>Rationale</th>
+</tr></thead><tbody>
+<tr><td>CHG-42b2d71050</td><td>CHG-42b2d71050, DPL-952cfcb9b8</td><td>Change CHG-42b2d71050 on deploy was deployed 2025-10-27 with no approval recorded on the ticket.</td></tr>
+<tr><td>CHG-b7d7345e53</td><td>CHG-b7d7345e53, DPL-6d472a5703</td><td>Change CHG-b7d7345e53 on hris was deployed 2026-04-08 with no approval recorded on the ticket.</td></tr>
+<tr><td>CHG-d71439be17</td><td>CHG-d71439be17, DPL-3ee3e35549</td><td>Change CHG-d71439be17 on deploy was deployed 2025-02-21 with no approval recorded on the ticket.</td></tr>
+<tr><td>CHG-f8b56c1b61</td><td>CHG-f8b56c1b61, DPL-e28e0bba6e</td><td>Change CHG-f8b56c1b61 on hris was deployed 2026-02-23 with no approval recorded on the ticket.</td></tr>
+</tbody></table>
+<h2>Limitations</h2>
+<ul>
+<li>Approval is evidenced by ticket fields only; an approval given out-of-band and never recorded is indistinguishable from none.</li>
+<li>Emergency changes are expected to be approved after deployment; their post-hoc review is examined by CHG-EMER, not here.</li>
+</ul>
+<h2>Framework references</h2>
+<blockquote>References indicate that this procedure produces evidence RELEVANT to the control. They never assert the control is satisfied.</blockquote>
+<table><thead><tr>
+<th>Control</th>
+<th>Original summary</th>
+<th>Relevance</th>
+</tr></thead><tbody>
+<tr><td>iso-27001-2022:A.8.32</td><td>System changes follow a controlled path: recorded request, arm&#x27;s-length approval, and traceable deployment.</td><td>Deployments lacking recorded approval evidence changes travelling outside the controlled path.</td></tr>
+<tr><td>cobit-2019:BAI06.01</td><td>Change requests are evaluated and authorized before implementation, at arm&#x27;s length from the implementer.</td><td>Authorization-before-implementation is the practice tested by reconciling approvals to deploy dates.</td></tr>
+<tr><td>nist-csf-2.0:PR.PS-01</td><td>Configuration management practices are established and applied so platforms stay in known, approved states.</td><td>Applied configuration management implies production changes carry recorded, prior authorization.</td></tr>
+</tbody></table>
+<h2>Certification study tags</h2>
+<ul>
+<li>CISA D4-A: IT Change, Configuration, and Patch Management</li>
+</ul>
+</body></html>

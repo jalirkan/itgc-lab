@@ -10,6 +10,14 @@
     "deploy-exec": {"privileged": true},
     "deploy-admin": {"privileged": true}
   },
+  "dir": {
+    "user": {"privileged": false},
+    "dir-admin": {"privileged": true}
+  },
+  "mail": {
+    "user": {"privileged": false},
+    "mail-admin": {"privileged": true}
+  },
   "erp": {
     "ap-entry": {"privileged": false},
     "ap-approve": {"privileged": false},

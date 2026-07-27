@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>Workpaper CHG-TICK — Deploy-log entries with no matching ticket</title>
+<style>
+body { font-family: Georgia, 'Times New Roman', serif; margin: 2rem auto;
+       max-width: 60rem; color: rgb(25, 30, 35); line-height: 1.45; }
+h1 { font-size: 1.6rem; border-bottom: 2px solid rgb(25, 30, 35);
+     padding-bottom: 0.4rem; }
+h2 { font-size: 1.15rem; margin-top: 1.6rem; }
+p.subtitle { color: rgb(90, 96, 102); font-style: italic; }
+table { border-collapse: collapse; margin: 0.6rem 0; }
+th, td { border: 1px solid rgb(170, 175, 180); padding: 0.3rem 0.55rem;
+         text-align: left; vertical-align: top; font-size: 0.92rem; }
+th { background: rgb(238, 240, 242); }
+blockquote { border-left: 4px solid rgb(170, 175, 180); margin: 0.6rem 0;
+             padding: 0.2rem 0.8rem; color: rgb(90, 96, 102); }
+dl { margin: 0.4rem 0; }
+dt { font-weight: bold; }
+dd { margin: 0 0 0.35rem 1.2rem; }
+</style>
+</head><body>
+<h1>Workpaper CHG-TICK — Deploy-log entries with no matching ticket</h1>
+<p class="subtitle">Outcome: exception</p>
+<h2>Identity</h2>
+<dl>
+<dt>Enterprise seed</dt><dd>run-001</dd>
+<dt>Snapshot</dt><dd>2026-06-30</dd>
+<dt>Window start</dt><dd>2024-12-30</dd>
+<dt>Generator version</dt><dd>0.1.0</dd>
+<dt>Workpaper generator</dt><dd>itgc-lab 0.1.0</dd>
+<dt>Rule</dt><dd>CHG-TICK</dd>
+<dt>Outcome</dt><dd>exception</dd>
+</dl>
+<h2>Objective and criterion</h2>
+<p>A deploy-log entry is a lead when it references no ticket, or references a ticket id that does not exist in the ticket system.</p>
+<h2>Population</h2>
+<p>All deploy-log entries, reconciled against the full ticket export (complete examination).</p>
+<p>Records examined: 699 of 699.</p>
+<blockquote>Each procedure examines 100 percent of its declared population as of the snapshot. Counts are census facts about this population, not sample estimates, and are always stated with the population size.</blockquote>
+<h2>Policy thresholds applied</h2>
+<p>This procedure uses no policy thresholds.</p>
+<h2>Results of examination</h2>
+<p>4 lead(s) raised from 699 records examined.</p>
+<table><thead><tr>
+<th>Subject</th>
+<th>Record id(s)</th>
+<th>Rationale</th>
+</tr></thead><tbody>
+<tr><td>DPL-08fe2154e3</td><td>DPL-08fe2154e3</td><td>Deployment to hris on 2025-08-07 by E-d2bd3ca7a6 references ticket id CHG-7357527ca1, which does not exist in the ticket system.</td></tr>
+<tr><td>DPL-4cc0a0cdc6</td><td>DPL-4cc0a0cdc6</td><td>Deployment to deploy on 2025-08-26 by E-ee1a6af417 references ticket id CHG-223e8631de, which does not exist in the ticket system.</td></tr>
+<tr><td>DPL-d063886b3d</td><td>DPL-d063886b3d</td><td>Deployment to hris on 2026-03-04 by E-bdcbcc7d50 references ticket id CHG-6b653aee8d, which does not exist in the ticket system.</td></tr>
+<tr><td>DPL-d1d33cf719</td><td>DPL-d1d33cf719</td><td>Deployment to erp on 2025-08-06 by E-25057126d1 references ticket id CHG-62d624da92, which does not exist in the ticket system.</td></tr>
+</tbody></table>
+<h2>Limitations</h2>
+<ul>
+<li>Reconciliation is by ticket id: a deploy attached to the WRONG ticket reconciles cleanly and is not caught here.</li>
+</ul>
+<h2>Framework references</h2>
+<blockquote>References indicate that this procedure produces evidence RELEVANT to the control. They never assert the control is satisfied.</blockquote>
+<table><thead><tr>
+<th>Control</th>
+<th>Original summary</th>
+<th>Relevance</th>
+</tr></thead><tbody>
+<tr><td>iso-27001-2022:A.8.32</td><td>System changes follow a controlled path: recorded request, arm&#x27;s-length approval, and traceable deployment.</td><td>A deploy with no ticket is a change with no recorded request or approval - outside the controlled path entirely.</td></tr>
+<tr><td>cobit-2019:BAI06.03</td><td>Change status is tracked and reported through closure so no request quietly stalls or disappears.</td><td>Tracking through closure fails loudly when the deployment log holds entries the ticket system never saw.</td></tr>
+<tr><td>nist-csf-2.0:PR.PS-01</td><td>Configuration management practices are established and applied so platforms stay in known, approved states.</td><td>Log-versus-ticket reconciliation evidences whether configuration management practice covers all deployments.</td></tr>
+</tbody></table>
+<h2>Certification study tags</h2>
+<ul>
+<li>CISA D4-A: IT Change, Configuration, and Patch Management</li>
+</ul>
+</body></html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>Workpaper ACC-SVC — Service and shared account ownership</title>
+<style>
+body { font-family: Georgia, 'Times New Roman', serif; margin: 2rem auto;
+       max-width: 60rem; color: rgb(25, 30, 35); line-height: 1.45; }
+h1 { font-size: 1.6rem; border-bottom: 2px solid rgb(25, 30, 35);
+     padding-bottom: 0.4rem; }
+h2 { font-size: 1.15rem; margin-top: 1.6rem; }
+p.subtitle { color: rgb(90, 96, 102); font-style: italic; }
+table { border-collapse: collapse; margin: 0.6rem 0; }
+th, td { border: 1px solid rgb(170, 175, 180); padding: 0.3rem 0.55rem;
+         text-align: left; vertical-align: top; font-size: 0.92rem; }
+th { background: rgb(238, 240, 242); }
+blockquote { border-left: 4px solid rgb(170, 175, 180); margin: 0.6rem 0;
+             padding: 0.2rem 0.8rem; color: rgb(90, 96, 102); }
+dl { margin: 0.4rem 0; }
+dt { font-weight: bold; }
+dd { margin: 0 0 0.35rem 1.2rem; }
+</style>
+</head><body>
+<h1>Workpaper ACC-SVC — Service and shared account ownership</h1>
+<p class="subtitle">Outcome: exception</p>
+<h2>Identity</h2>
+<dl>
+<dt>Enterprise seed</dt><dd>run-001</dd>
+<dt>Snapshot</dt><dd>2026-06-30</dd>
+<dt>Window start</dt><dd>2024-12-30</dd>
+<dt>Generator version</dt><dd>0.1.0</dd>
+<dt>Workpaper generator</dt><dd>itgc-lab 0.1.0</dd>
+<dt>Rule</dt><dd>ACC-SVC</dd>
+<dt>Outcome</dt><dd>exception</dd>
+</dl>
+<h2>Objective and criterion</h2>
+<p>A service or shared account is a lead when it has no recorded owner, or its owner is not an active employee.</p>
+<h2>Population</h2>
+<p>All active grants on service and shared accounts (complete examination).</p>
+<p>Records examined: 18 of 18.</p>
+<blockquote>Each procedure examines 100 percent of its declared population as of the snapshot. Counts are census facts about this population, not sample estimates, and are always stated with the population size.</blockquote>
+<h2>Policy thresholds applied</h2>
+<p>This procedure uses no policy thresholds.</p>
+<h2>Results of examination</h2>
+<p>4 lead(s) raised from 18 records examined.</p>
+<table><thead><tr>
+<th>Subject</th>
+<th>Record id(s)</th>
+<th>Rationale</th>
+</tr></thead><tbody>
+<tr><td>svc-dir-02</td><td>G-785adcbd16</td><td>Service account svc-dir-02 has no recorded owner.</td></tr>
+<tr><td>svc-crm-01</td><td>G-94436cead2</td><td>Service account svc-crm-01 has no recorded owner.</td></tr>
+<tr><td>shared-erp-01</td><td>G-ce6e20e761</td><td>Shared account shared-erp-01 has no recorded owner.</td></tr>
+<tr><td>svc-deploy-01</td><td>G-d011d072cb</td><td>Service account svc-deploy-01 has no recorded owner.</td></tr>
+</tbody></table>
+<h2>Limitations</h2>
+<ul>
+<li>Ownership is the only hygiene attribute in this export; password rotation, vaulting, and interactive-logon restrictions are not visible here.</li>
+</ul>
+<h2>Framework references</h2>
+<blockquote>References indicate that this procedure produces evidence RELEVANT to the control. They never assert the control is satisfied.</blockquote>
+<table><thead><tr>
+<th>Control</th>
+<th>Original summary</th>
+<th>Relevance</th>
+</tr></thead><tbody>
+<tr><td>iso-27001-2022:A.5.16</td><td>Identities are unique, tied to a person or a sanctioned non-human use, and retired when no longer needed.</td><td>Non-human identities require sanctioned, current ownership; an unowned account evidences a registration gap.</td></tr>
+<tr><td>cobit-2019:DSS05.04</td><td>User identities and logical access are managed across their lifecycle so every account traces to a live business need.</td><td>Service and shared accounts are lifecycle-managed identities; ownership is the accountability anchor.</td></tr>
+<tr><td>nist-csf-2.0:PR.AA-01</td><td>Identities and credentials for users, services, and hardware are issued, managed, and revoked by the organization.</td><td>Credentials for services are organization-managed only if a live owner answers for them.</td></tr>
+</tbody></table>
+<h2>Certification study tags</h2>
+<ul>
+<li>CISA D5-A: Identity and Access Management</li>
+</ul>
+</body></html>

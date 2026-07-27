@@ -1,15 +1,15 @@
 {
-  "accounts-payable-clerk": ["erp:ap-entry"],
-  "financial-analyst": ["erp:fin-report"],
-  "controller": ["erp:ap-approve", "erp:fin-report", "erp:gl-post"],
-  "software-developer": ["deploy:dev-commit"],
-  "devops-engineer": ["deploy:deploy-exec", "deploy:dev-commit"],
-  "qa-analyst": ["deploy:deploy-approve"],
-  "system-administrator": ["crm:crm-admin", "deploy:deploy-admin", "erp:erp-admin", "hris:hris-admin"],
-  "service-desk-analyst": ["crm:crm-user"],
-  "security-analyst": ["crm:crm-user", "erp:fin-report"],
-  "hr-generalist": ["hris:hr-user"],
-  "payroll-specialist": ["hris:hr-user", "hris:payroll-run"],
-  "account-manager": ["crm:crm-user"],
-  "sales-operations-analyst": ["crm:crm-report", "crm:crm-user"]
+  "accounts-payable-clerk": ["dir:user", "erp:ap-entry", "mail:user"],
+  "financial-analyst": ["dir:user", "erp:fin-report", "mail:user"],
+  "controller": ["dir:user", "erp:ap-approve", "erp:fin-report", "erp:gl-post", "mail:user"],
+  "software-developer": ["deploy:dev-commit", "dir:user", "mail:user"],
+  "devops-engineer": ["deploy:deploy-exec", "deploy:dev-commit", "dir:user", "mail:user"],
+  "qa-analyst": ["deploy:deploy-approve", "dir:user", "mail:user"],
+  "system-administrator": ["crm:crm-admin", "deploy:deploy-admin", "dir:dir-admin", "dir:user", "erp:erp-admin", "hris:hris-admin", "mail:mail-admin", "mail:user"],
+  "service-desk-analyst": ["crm:crm-user", "dir:user", "mail:user"],
+  "security-analyst": ["crm:crm-user", "dir:user", "erp:fin-report", "mail:user"],
+  "hr-generalist": ["dir:user", "hris:hr-user", "mail:user"],
+  "payroll-specialist": ["dir:user", "hris:hr-user", "hris:payroll-run", "mail:user"],
+  "account-manager": ["crm:crm-user", "dir:user", "mail:user"],
+  "sales-operations-analyst": ["crm:crm-report", "crm:crm-user", "dir:user", "mail:user"]
 }

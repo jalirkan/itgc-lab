@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>Workpaper ACC-AUTH — Roles outside the authorization matrix</title>
+<style>
+body { font-family: Georgia, 'Times New Roman', serif; margin: 2rem auto;
+       max-width: 60rem; color: rgb(25, 30, 35); line-height: 1.45; }
+h1 { font-size: 1.6rem; border-bottom: 2px solid rgb(25, 30, 35);
+     padding-bottom: 0.4rem; }
+h2 { font-size: 1.15rem; margin-top: 1.6rem; }
+p.subtitle { color: rgb(90, 96, 102); font-style: italic; }
+table { border-collapse: collapse; margin: 0.6rem 0; }
+th, td { border: 1px solid rgb(170, 175, 180); padding: 0.3rem 0.55rem;
+         text-align: left; vertical-align: top; font-size: 0.92rem; }
+th { background: rgb(238, 240, 242); }
+blockquote { border-left: 4px solid rgb(170, 175, 180); margin: 0.6rem 0;
+             padding: 0.2rem 0.8rem; color: rgb(90, 96, 102); }
+dl { margin: 0.4rem 0; }
+dt { font-weight: bold; }
+dd { margin: 0 0 0.35rem 1.2rem; }
+</style>
+</head><body>
+<h1>Workpaper ACC-AUTH — Roles outside the authorization matrix</h1>
+<p class="subtitle">Outcome: exception</p>
+<h2>Identity</h2>
+<dl>
+<dt>Enterprise seed</dt><dd>run-001</dd>
+<dt>Snapshot</dt><dd>2026-06-30</dd>
+<dt>Window start</dt><dd>2024-12-30</dd>
+<dt>Generator version</dt><dd>0.1.0</dd>
+<dt>Workpaper generator</dt><dd>itgc-lab 0.1.0</dd>
+<dt>Rule</dt><dd>ACC-AUTH</dd>
+<dt>Outcome</dt><dd>exception</dd>
+</dl>
+<h2>Objective and criterion</h2>
+<p>An active grant is a lead when its role is not authorized for the holder&#x27;s current job function and no unexpired recorded exception covers it.</p>
+<h2>Population</h2>
+<p>All active user-account grants held by roster employees whose employment stint is open at the snapshot (complete examination).</p>
+<p>Records examined: 20217 of 20217.</p>
+<blockquote>Each procedure examines 100 percent of its declared population as of the snapshot. Counts are census facts about this population, not sample estimates, and are always stated with the population size.</blockquote>
+<h2>Policy thresholds applied</h2>
+<p>This procedure uses no policy thresholds.</p>
+<h2>Results of examination</h2>
+<p>8 lead(s) raised from 20217 records examined.</p>
+<table><thead><tr>
+<th>Subject</th>
+<th>Record id(s)</th>
+<th>Rationale</th>
+</tr></thead><tbody>
+<tr><td>E-69a80a2249</td><td>G-260294257f</td><td>Role deploy:deploy-approve is outside the authorization matrix for job function sales-operations-analyst, and no recorded exception applies.</td></tr>
+<tr><td>E-3c00987e1e</td><td>G-38e4cad92e</td><td>Role erp:ap-approve is outside the authorization matrix for job function accounts-payable-clerk, and no recorded exception applies.</td></tr>
+<tr><td>E-50aaf0f436</td><td>G-5f3f1a07b1</td><td>Role erp:ap-entry is outside the authorization matrix for job function controller, and no recorded exception applies.</td></tr>
+<tr><td>E-936517a1b2</td><td>G-6eb0746f54</td><td>Role deploy:deploy-approve is outside the authorization matrix for job function security-analyst, and no recorded exception applies.</td></tr>
+<tr><td>E-fd399d7f30</td><td>G-7cb9bf828d</td><td>Role deploy:dev-commit is outside the authorization matrix for job function system-administrator, and no recorded exception applies.</td></tr>
+<tr><td>E-8103db51a4</td><td>G-81f59d1b88</td><td>Role deploy:deploy-approve is outside the authorization matrix for job function software-developer, and no recorded exception applies.</td></tr>
+<tr><td>E-8d41aa1c75</td><td>G-8db4b9daab</td><td>Role erp:gl-post is outside the authorization matrix for job function system-administrator, and no recorded exception applies.</td></tr>
+<tr><td>E-d64af21291</td><td>G-bad9242b73</td><td>Role deploy:dev-commit is outside the authorization matrix for job function security-analyst, and no recorded exception applies.</td></tr>
+</tbody></table>
+<h2>Limitations</h2>
+<ul>
+<li>The matrix is evaluated against the holder&#x27;s job function at the snapshot; access that was proper under a prior function appears here once the function changes.</li>
+<li>Recorded exceptions are honored at face value; whether an exception SHOULD have been granted is a reviewer judgment.</li>
+<li>A job function absent from the matrix yields a coverage lead for every grant its holders carry, not a pass.</li>
+</ul>
+<h2>Framework references</h2>
+<blockquote>References indicate that this procedure produces evidence RELEVANT to the control. They never assert the control is satisfied.</blockquote>
+<table><thead><tr>
+<th>Control</th>
+<th>Original summary</th>
+<th>Relevance</th>
+</tr></thead><tbody>
+<tr><td>iso-27001-2022:A.5.18</td><td>Access rights are provisioned on business need and removed or adjusted promptly at termination or role change.</td><td>Grants compared to the function-based matrix evidence provisioning on business need, exception-managed otherwise.</td></tr>
+<tr><td>cobit-2019:DSS06.03</td><td>Roles, access privileges, and authority levels stay aligned with assigned duties and their required separations.</td><td>Role-aligned privileges are the criterion this rule reconciles grant-by-grant against the matrix.</td></tr>
+<tr><td>nist-csf-2.0:PR.AA-05</td><td>Access permissions are policy-defined, enforced, and reviewed, incorporating least privilege and separation of duties.</td><td>Policy-defined and reviewed permissions are tested directly against the recorded authorization policy.</td></tr>
+</tbody></table>
+<h2>Certification study tags</h2>
+<ul>
+<li>CISA D5-A: Identity and Access Management</li>
+</ul>
+</body></html>

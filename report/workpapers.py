@@ -233,6 +233,66 @@ def card_doc(card):
     )
 
 
+def continuous_doc(diff, aging):
+    """Render the snapshot-pair comparison and lead aging."""
+    win = diff["window"]
+    prof = diff["population_profile"]
+    profile_rows = []
+    for key in sorted(prof["delta"]):
+        profile_rows.append([key, prof["prior"][key], prof["current"][key],
+                             "{0:+d}".format(prof["delta"][key])])
+    open_rows = [[l["rule_id"], l["subject"], l["status"],
+                  l["min_age_days"], ", ".join(l["record_ids"])]
+                 for l in aging["open_leads"]]
+    resolved_rows = [[l["rule_id"], l["subject"],
+                      ", ".join(l["record_ids"])]
+                     for l in aging["resolved_leads"]]
+    rec = diff["recertification"]
+    sections = [
+        section("Window", kv([
+            ("Prior snapshot", win["from"]),
+            ("Current snapshot", win["to"]),
+            ("Days between", win["days"]),
+        ])),
+        section("Access deltas", kv([
+            ("New grants", "{0} (of {1} active at current)".format(
+                diff["grants"]["new_n"], prof["current"]["grants_active"])),
+            ("New privileged grants", diff["grants"]["new_privileged_n"]),
+            ("Grants removed or disabled", diff["grants"]["removed_n"]),
+            ("Newly dormant privileged",
+             diff["newly_dormant_privileged"]["n"]),
+            ("Terminations in window", len(diff["terminations_in_window"])),
+        ])),
+        section("Recertification tracking", kv([
+            ("Cycle days", rec["cycle_days"]),
+            ("Lapsed now", "{0} (prior snapshot: {1})".format(
+                rec["lapsed_n"], rec["lapsed_prior_n"])),
+            ("Coming due within {0} days".format(
+                rec["coming_due_within_days"]), rec["coming_due_n"]),
+        ])),
+        section("Population profile",
+                table(["Metric", "Prior", "Current", "Delta"],
+                      profile_rows)),
+        section("Open leads", note(aging["note"]),
+                kv([("Open", aging["counts"]["open"]),
+                    ("New since prior", aging["counts"]["new"]),
+                    ("Persisting", aging["counts"]["persisting"]),
+                    ("Resolved since prior", aging["counts"]["resolved"])])),
+    ]
+    if open_rows:
+        sections.append(section(
+            "Open lead detail",
+            table(["Rule", "Subject", "Status", "Min age (days)",
+                   "Record id(s)"], open_rows)))
+    if resolved_rows:
+        sections.append(section(
+            "Resolved since prior snapshot",
+            table(["Rule", "Subject", "Record id(s)"], resolved_rows)))
+    return doc("Continuous monitoring — snapshot pair",
+               "Deltas, lead aging, and recertification tracking",
+               *sections)
+
+
 def coverage_doc(cov):
     rows = []
     for entry in cov["controls"]:

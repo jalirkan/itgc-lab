@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>Workpaper ACC-SOD — Segregation-of-duties toxic combinations</title>
+<style>
+body { font-family: Georgia, 'Times New Roman', serif; margin: 2rem auto;
+       max-width: 60rem; color: rgb(25, 30, 35); line-height: 1.45; }
+h1 { font-size: 1.6rem; border-bottom: 2px solid rgb(25, 30, 35);
+     padding-bottom: 0.4rem; }
+h2 { font-size: 1.15rem; margin-top: 1.6rem; }
+p.subtitle { color: rgb(90, 96, 102); font-style: italic; }
+table { border-collapse: collapse; margin: 0.6rem 0; }
+th, td { border: 1px solid rgb(170, 175, 180); padding: 0.3rem 0.55rem;
+         text-align: left; vertical-align: top; font-size: 0.92rem; }
+th { background: rgb(238, 240, 242); }
+blockquote { border-left: 4px solid rgb(170, 175, 180); margin: 0.6rem 0;
+             padding: 0.2rem 0.8rem; color: rgb(90, 96, 102); }
+dl { margin: 0.4rem 0; }
+dt { font-weight: bold; }
+dd { margin: 0 0 0.35rem 1.2rem; }
+</style>
+</head><body>
+<h1>Workpaper ACC-SOD — Segregation-of-duties toxic combinations</h1>
+<p class="subtitle">Outcome: exception</p>
+<h2>Identity</h2>
+<dl>
+<dt>Enterprise seed</dt><dd>run-001</dd>
+<dt>Snapshot</dt><dd>2026-06-30</dd>
+<dt>Window start</dt><dd>2024-12-30</dd>
+<dt>Generator version</dt><dd>0.1.0</dd>
+<dt>Workpaper generator</dt><dd>itgc-lab 0.1.0</dd>
+<dt>Rule</dt><dd>ACC-SOD</dd>
+<dt>Outcome</dt><dd>exception</dd>
+</dl>
+<h2>Objective and criterion</h2>
+<p>A user is a lead when their active grants include both sides of a pair the SoD matrix declares conflicting.</p>
+<h2>Population</h2>
+<p>All roster employees holding at least one active grant, each evaluated against every SoD pair (complete examination at the user level).</p>
+<p>Records examined: 5406 of 5406.</p>
+<blockquote>Each procedure examines 100 percent of its declared population as of the snapshot. Counts are census facts about this population, not sample estimates, and are always stated with the population size.</blockquote>
+<h2>Policy thresholds applied</h2>
+<p>This procedure uses no policy thresholds.</p>
+<h2>Results of examination</h2>
+<p>4 lead(s) raised from 5406 records examined.</p>
+<table><thead><tr>
+<th>Subject</th>
+<th>Record id(s)</th>
+<th>Rationale</th>
+</tr></thead><tbody>
+<tr><td>E-3c00987e1e</td><td>G-38e4cad92e, G-cd098cda49</td><td>User holds both erp:ap-entry and erp:ap-approve. One identity can both create and approve a payable.</td></tr>
+<tr><td>E-50aaf0f436</td><td>G-5f3f1a07b1, G-b2e8b3abbb</td><td>User holds both erp:ap-entry and erp:ap-approve. One identity can both create and approve a payable.</td></tr>
+<tr><td>E-8103db51a4</td><td>G-755e0ee6c8, G-81f59d1b88</td><td>User holds both deploy:dev-commit and deploy:deploy-approve. One identity can both author a change and approve its release.</td></tr>
+<tr><td>E-8d41aa1c75</td><td>G-72967429e6, G-8db4b9daab</td><td>User holds both erp:gl-post and erp:erp-admin. One identity can both post journal entries and alter ERP controls.</td></tr>
+</tbody></table>
+<h2>Limitations</h2>
+<ul>
+<li>Only pairs declared in the SoD matrix are evaluated; conflicts the matrix does not name are not screened.</li>
+<li>The register of cross-functional exceptions does not waive SoD conflicts here: compensating controls are a reviewer judgment outside this data.</li>
+<li>Conflicts across separate accounts of the same person in different systems are matched by employee id only.</li>
+</ul>
+<h2>Framework references</h2>
+<blockquote>References indicate that this procedure produces evidence RELEVANT to the control. They never assert the control is satisfied.</blockquote>
+<table><thead><tr>
+<th>Control</th>
+<th>Original summary</th>
+<th>Relevance</th>
+</tr></thead><tbody>
+<tr><td>iso-27001-2022:A.5.3</td><td>Conflicting duties are separated so no single identity can initiate, approve, and conceal the same transaction or change.</td><td>Detects one identity holding both sides of a declared conflicting-duty pair across systems.</td></tr>
+<tr><td>cobit-2019:DSS06.03</td><td>Roles, access privileges, and authority levels stay aligned with assigned duties and their required separations.</td><td>Authority levels and their required separations are tested against the declared toxic-pair matrix.</td></tr>
+<tr><td>nist-csf-2.0:PR.AA-05</td><td>Access permissions are policy-defined, enforced, and reviewed, incorporating least privilege and separation of duties.</td><td>Separation of duties is named in this subcategory; the rule evidences its operation in granted access.</td></tr>
+</tbody></table>
+<h2>Certification study tags</h2>
+<ul>
+<li>CISA D5-A: Identity and Access Management</li>
+</ul>
+</body></html>

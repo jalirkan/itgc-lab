@@ -93,6 +93,13 @@ class _Ctx:
         self.emps = _employees_by_id(ent)
         self.matrix = catalogs.authorization_matrix()
         self.sod_pairs = catalogs.sod_matrix()["pairs"]
+        # Indexes: pool construction is O(population) with these, and the
+        # single-pass build keeps selection order deterministic.
+        self._grants_by_user = {}
+        for g in self.grants:
+            if g["user_id"] is not None:
+                self._grants_by_user.setdefault(g["user_id"], []).append(g)
+        self._deploy_by_ticket = {d["ticket_id"]: d for d in self.deploys}
 
     @property
     def grants(self):
@@ -106,16 +113,22 @@ class _Ctx:
     def deploys(self):
         return self.ent["deploys"]["deploys"]
 
+    def register_grant(self, g):
+        if g["user_id"] is not None:
+            self._grants_by_user.setdefault(g["user_id"], []).append(g)
+
+    def register_deploy(self, d):
+        self._deploy_by_ticket[d["ticket_id"]] = d
+
+    def user_grants(self, eid):
+        return self._grants_by_user.get(eid, [])
+
     def deploy_of(self, ticket_id):
-        for d in self.deploys:
-            if d["ticket_id"] == ticket_id:
-                return d
-        return None
+        return self._deploy_by_ticket.get(ticket_id)
 
     def held_roles(self, eid):
         return {"{0}:{1}".format(g["system"], g["role"])
-                for g in self.grants
-                if g["user_id"] == eid and g["status"] == "active"}
+                for g in self.user_grants(eid) if g["status"] == "active"}
 
     def mutable_deployed_tickets(self):
         return [t for t in self.tickets
@@ -139,8 +152,8 @@ def _plant_terminated_active(ctx):
             continue
         if dates.days_between(seg["end"], ctx.snapshot) <= grace + 5:
             continue
-        cands = [g for g in ctx.grants
-                 if g["user_id"] == eid and g["status"] == "disabled"
+        cands = [g for g in ctx.user_grants(eid)
+                 if g["status"] == "disabled"
                  and not g["privileged"] and g["grant_id"] not in ctx.used_grants]
         if cands:
             pool.append((eid, sorted(c["grant_id"] for c in cands)[0]))
@@ -182,6 +195,7 @@ def _plant_orphan_account(ctx):
         granted, dates.add_days(ctx.snapshot, -ctx.rng.randint(30, 200)))
     ctx.grants.append(g)
     ctx.grants.sort(key=lambda x: x["grant_id"])
+    ctx.register_grant(g)
     ctx.used_grants.add(g["grant_id"])
     return {
         "refs": {"grant_ids": [g["grant_id"]], "user_id": fake},
@@ -246,6 +260,7 @@ def _add_role_grant(ctx, eid, sys_role, seq):
     g["last_certified_date"] = granted
     ctx.grants.append(g)
     ctx.grants.sort(key=lambda x: x["grant_id"])
+    ctx.register_grant(g)
     ctx.used_grants.add(g["grant_id"])
     ctx.used_users.add(eid)
     return g
@@ -297,8 +312,8 @@ def _plant_sod_conflict(ctx):
     # grant, so flagging the pre-existing half is correct detection, not a
     # false positive (per lab D-019's pair-originals rule).
     counterpart_ids = sorted(
-        x["grant_id"] for x in ctx.grants
-        if x["user_id"] == eid and x["status"] == "active"
+        x["grant_id"] for x in ctx.user_grants(eid)
+        if x["status"] == "active"
         and "{0}:{1}".format(x["system"], x["role"]) == held_half)
     return {
         "refs": {"grant_ids": sorted([g["grant_id"]] + counterpart_ids),
@@ -417,6 +432,7 @@ def _plant_emergency_no_review(ctx):
          "ticket_id": tid, "deployed_by": developer, "deployed_at": day}
     ctx.deploys.append(d)
     ctx.deploys.sort(key=lambda x: x["deploy_id"])
+    ctx.register_deploy(d)
     ctx.used_tickets.add(tid)
     return {
         "refs": {"ticket_id": tid, "deploy_id": d["deploy_id"]},
@@ -442,6 +458,7 @@ def _plant_deploy_without_ticket(ctx):
          "deployed_at": day}
     ctx.deploys.append(d)
     ctx.deploys.sort(key=lambda x: x["deploy_id"])
+    ctx.register_deploy(d)
     return {
         "refs": {"deploy_id": d["deploy_id"], "ticket_id": fake},
         "note": "Planted: deploy-log entry references a change ticket that "

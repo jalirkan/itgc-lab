@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>Workpaper CHG-FRZ — Deployments inside change-freeze windows</title>
+<style>
+body { font-family: Georgia, 'Times New Roman', serif; margin: 2rem auto;
+       max-width: 60rem; color: rgb(25, 30, 35); line-height: 1.45; }
+h1 { font-size: 1.6rem; border-bottom: 2px solid rgb(25, 30, 35);
+     padding-bottom: 0.4rem; }
+h2 { font-size: 1.15rem; margin-top: 1.6rem; }
+p.subtitle { color: rgb(90, 96, 102); font-style: italic; }
+table { border-collapse: collapse; margin: 0.6rem 0; }
+th, td { border: 1px solid rgb(170, 175, 180); padding: 0.3rem 0.55rem;
+         text-align: left; vertical-align: top; font-size: 0.92rem; }
+th { background: rgb(238, 240, 242); }
+blockquote { border-left: 4px solid rgb(170, 175, 180); margin: 0.6rem 0;
+             padding: 0.2rem 0.8rem; color: rgb(90, 96, 102); }
+dl { margin: 0.4rem 0; }
+dt { font-weight: bold; }
+dd { margin: 0 0 0.35rem 1.2rem; }
+</style>
+</head><body>
+<h1>Workpaper CHG-FRZ — Deployments inside change-freeze windows</h1>
+<p class="subtitle">Outcome: exception</p>
+<h2>Identity</h2>
+<dl>
+<dt>Enterprise seed</dt><dd>run-001</dd>
+<dt>Snapshot</dt><dd>2026-06-30</dd>
+<dt>Window start</dt><dd>2024-12-30</dd>
+<dt>Generator version</dt><dd>0.1.0</dd>
+<dt>Workpaper generator</dt><dd>itgc-lab 0.1.0</dd>
+<dt>Rule</dt><dd>CHG-FRZ</dd>
+<dt>Outcome</dt><dd>exception</dd>
+</dl>
+<h2>Objective and criterion</h2>
+<p>A deploy-log entry is a lead when its deployment date falls inside a declared change-freeze window.</p>
+<h2>Population</h2>
+<p>All deploy-log entries, tested against every declared freeze window (complete examination).</p>
+<p>Records examined: 699 of 699.</p>
+<blockquote>Each procedure examines 100 percent of its declared population as of the snapshot. Counts are census facts about this population, not sample estimates, and are always stated with the population size.</blockquote>
+<h2>Policy thresholds applied</h2>
+<p>This procedure uses no policy thresholds.</p>
+<h2>Results of examination</h2>
+<p>4 lead(s) raised from 699 records examined.</p>
+<table><thead><tr>
+<th>Subject</th>
+<th>Record id(s)</th>
+<th>Rationale</th>
+</tr></thead><tbody>
+<tr><td>DPL-1be92174b3</td><td>CHG-d186ec64fd, DPL-1be92174b3</td><td>Deployment to erp on 2025-03-29 falls inside the freeze window 2025-03-29 to 2025-03-31 (Quarter-end change freeze).</td></tr>
+<tr><td>DPL-1f861f5a59</td><td>CHG-b63615661c, DPL-1f861f5a59</td><td>Deployment to deploy on 2025-12-30 falls inside the freeze window 2025-12-29 to 2025-12-31 (Quarter-end change freeze).</td></tr>
+<tr><td>DPL-7c773b8e54</td><td>CHG-85b190bd54, DPL-7c773b8e54</td><td>Deployment to hris on 2025-12-30 falls inside the freeze window 2025-12-29 to 2025-12-31 (Quarter-end change freeze).</td></tr>
+<tr><td>DPL-940ae6b125</td><td>CHG-6c7bb19553, DPL-940ae6b125</td><td>Deployment to hris on 2025-03-30 falls inside the freeze window 2025-03-29 to 2025-03-31 (Quarter-end change freeze).</td></tr>
+</tbody></table>
+<h2>Limitations</h2>
+<ul>
+<li>Freeze windows are taken from policy data; ad-hoc freezes announced elsewhere are invisible.</li>
+<li>No exemption mechanism exists in this data: an authorized in-freeze deployment would still surface as a lead for the reviewer to dispose of.</li>
+</ul>
+<h2>Framework references</h2>
+<blockquote>References indicate that this procedure produces evidence RELEVANT to the control. They never assert the control is satisfied.</blockquote>
+<table><thead><tr>
+<th>Control</th>
+<th>Original summary</th>
+<th>Relevance</th>
+</tr></thead><tbody>
+<tr><td>iso-27001-2022:A.8.32</td><td>System changes follow a controlled path: recorded request, arm&#x27;s-length approval, and traceable deployment.</td><td>Declared freeze windows are part of the controlled schedule; deployments inside them evidence the schedule not operating.</td></tr>
+<tr><td>cobit-2019:BAI06.01</td><td>Change requests are evaluated and authorized before implementation, at arm&#x27;s length from the implementer.</td><td>A deployment during a declared freeze proceeded against the standing authorization calendar.</td></tr>
+<tr><td>nist-csf-2.0:PR.PS-01</td><td>Configuration management practices are established and applied so platforms stay in known, approved states.</td><td>Freeze adherence is applied configuration management on the calendar dimension.</td></tr>
+</tbody></table>
+<h2>Certification study tags</h2>
+<ul>
+<li>CISA D4-A: IT Change, Configuration, and Patch Management</li>
+<li>CISA D3-B: Implementation Configuration and Release Management</li>
+</ul>
+</body></html>

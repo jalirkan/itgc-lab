@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>Detection report card</title>
+<style>
+body { font-family: Georgia, 'Times New Roman', serif; margin: 2rem auto;
+       max-width: 60rem; color: rgb(25, 30, 35); line-height: 1.45; }
+h1 { font-size: 1.6rem; border-bottom: 2px solid rgb(25, 30, 35);
+     padding-bottom: 0.4rem; }
+h2 { font-size: 1.15rem; margin-top: 1.6rem; }
+p.subtitle { color: rgb(90, 96, 102); font-style: italic; }
+table { border-collapse: collapse; margin: 0.6rem 0; }
+th, td { border: 1px solid rgb(170, 175, 180); padding: 0.3rem 0.55rem;
+         text-align: left; vertical-align: top; font-size: 0.92rem; }
+th { background: rgb(238, 240, 242); }
+blockquote { border-left: 4px solid rgb(170, 175, 180); margin: 0.6rem 0;
+             padding: 0.2rem 0.8rem; color: rgb(90, 96, 102); }
+dl { margin: 0.4rem 0; }
+dt { font-weight: bold; }
+dd { margin: 0 0 0.35rem 1.2rem; }
+</style>
+</head><body>
+<h1>Detection report card</h1>
+<p class="subtitle">Rules graded against planted ground truth across independent seeds</p>
+<h2>Identity</h2>
+<dl>
+<dt>Base seed</dt><dd>itgc-rc</dd>
+<dt>Seeds</dt><dd>itgc-rc-001, itgc-rc-002, itgc-rc-003, itgc-rc-004, itgc-rc-005</dd>
+<dt>Planted per class per seed</dt><dd>7</dd>
+<dt>Recall floor</dt><dd>0.9</dd>
+<dt>Access rules</dt><dd>ACC-TERM, ACC-ORPH, ACC-DORM, ACC-AUTH, ACC-SOD, ACC-SVC, ACC-CERT</dd>
+<dt>Change rules</dt><dd>CHG-APPR, CHG-SELF, CHG-EMER, CHG-TICK, CHG-FRZ, CHG-STAL</dd>
+</dl>
+<h2>How to read this card</h2>
+<p>A planted condition counts as caught when any rule flags any of its constituent records; the designed-rule column counts only the rule built for that class. Recall pools across seeds and is decided against its Wilson interval: a thin pool renders inconclusive rather than parading a perfect rate.</p>
+<blockquote>There is no composite score. The overall outcome is the worst class outcome by precedence: exception, then inconclusive, then pass.</blockquote>
+<h2>Recall by planted class</h2>
+<table><thead><tr>
+<th>Class</th>
+<th>Planted</th>
+<th>Caught (any)</th>
+<th>Recall (any rule)</th>
+<th>Caught (designed)</th>
+<th>Outcome</th>
+</tr></thead><tbody>
+<tr><td>access.dormant_privileged</td><td>35</td><td>35</td><td>recall (any rule): access.dormant_privileged: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35)</td><td>35</td><td>pass</td></tr>
+<tr><td>access.orphan_account</td><td>35</td><td>35</td><td>recall (any rule): access.orphan_account: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35)</td><td>35</td><td>pass</td></tr>
+<tr><td>access.recert_lapsed</td><td>35</td><td>35</td><td>recall (any rule): access.recert_lapsed: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35)</td><td>35</td><td>pass</td></tr>
+<tr><td>access.role_mismatch</td><td>35</td><td>35</td><td>recall (any rule): access.role_mismatch: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35)</td><td>35</td><td>pass</td></tr>
+<tr><td>access.service_account_no_owner</td><td>35</td><td>35</td><td>recall (any rule): access.service_account_no_owner: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35)</td><td>35</td><td>pass</td></tr>
+<tr><td>access.sod_conflict</td><td>35</td><td>35</td><td>recall (any rule): access.sod_conflict: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35)</td><td>35</td><td>pass</td></tr>
+<tr><td>access.terminated_active</td><td>35</td><td>35</td><td>recall (any rule): access.terminated_active: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35)</td><td>35</td><td>pass</td></tr>
+<tr><td>change.deploy_without_ticket</td><td>35</td><td>35</td><td>recall (any rule): change.deploy_without_ticket: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35)</td><td>35</td><td>pass</td></tr>
+<tr><td>change.emergency_no_review</td><td>35</td><td>35</td><td>recall (any rule): change.emergency_no_review: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35)</td><td>35</td><td>pass</td></tr>
+<tr><td>change.freeze_violation</td><td>35</td><td>35</td><td>recall (any rule): change.freeze_violation: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35)</td><td>35</td><td>pass</td></tr>
+<tr><td>change.missing_approval</td><td>35</td><td>35</td><td>recall (any rule): change.missing_approval: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35)</td><td>35</td><td>pass</td></tr>
+<tr><td>change.self_approval</td><td>35</td><td>35</td><td>recall (any rule): change.self_approval: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35)</td><td>35</td><td>pass</td></tr>
+<tr><td>change.stale_ticket</td><td>35</td><td>35</td><td>recall (any rule): change.stale_ticket: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35)</td><td>35</td><td>pass</td></tr>
+</tbody></table>
+<h2>Precision and false positives</h2>
+<dl>
+<dt>Precision</dt><dd>record-level precision on planted populations: 630/630 = 100.0% (95% Wilson 99.4%-100.0%, n=630)</dd>
+<dt>Clean-population flags, access engine</dt><dd>0.0 per 10k (95% Wilson 0.0-10.5 per 10k, n=3660)</dd>
+<dt>Clean-population flags, change engine</dt><dd>0.0 per 10k (95% Wilson 0.0-18.1 per 10k, n=2118)</dd>
+</dl>
+<p>Correct reconciliations should flag nothing in a clean population; the benign look-alikes exist so that a wrong implementation measurably would. A nonzero clean-population rate is an implementation regression, not noise.</p>
+<h2>Per-seed stability</h2>
+<table><thead><tr>
+<th>Class</th>
+<th>Seed</th>
+<th>Planted</th>
+<th>Caught (any)</th>
+</tr></thead><tbody>
+<tr><td>access.dormant_privileged</td><td>itgc-rc-001</td><td>7</td><td>7</td></tr>
+<tr><td>access.dormant_privileged</td><td>itgc-rc-002</td><td>7</td><td>7</td></tr>
+<tr><td>access.dormant_privileged</td><td>itgc-rc-003</td><td>7</td><td>7</td></tr>
+<tr><td>access.dormant_privileged</td><td>itgc-rc-004</td><td>7</td><td>7</td></tr>
+<tr><td>access.dormant_privileged</td><td>itgc-rc-005</td><td>7</td><td>7</td></tr>
+<tr><td>access.orphan_account</td><td>itgc-rc-001</td><td>7</td><td>7</td></tr>
+<tr><td>access.orphan_account</td><td>itgc-rc-002</td><td>7</td><td>7</td></tr>
+<tr><td>access.orphan_account</td><td>itgc-rc-003</td><td>7</td><td>7</td></tr>
+<tr><td>access.orphan_account</td><td>itgc-rc-004</td><td>7</td><td>7</td></tr>
+<tr><td>access.orphan_account</td><td>itgc-rc-005</td><td>7</td><td>7</td></tr>
+<tr><td>access.recert_lapsed</td><td>itgc-rc-001</td><td>7</td><td>7</td></tr>
+<tr><td>access.recert_lapsed</td><td>itgc-rc-002</td><td>7</td><td>7</td></tr>
+<tr><td>access.recert_lapsed</td><td>itgc-rc-003</td><td>7</td><td>7</td></tr>
+<tr><td>access.recert_lapsed</td><td>itgc-rc-004</td><td>7</td><td>7</td></tr>
+<tr><td>access.recert_lapsed</td><td>itgc-rc-005</td><td>7</td><td>7</td></tr>
+<tr><td>access.role_mismatch</td><td>itgc-rc-001</td><td>7</td><td>7</td></tr>
+<tr><td>access.role_mismatch</td><td>itgc-rc-002</td><td>7</td><td>7</td></tr>
+<tr><td>access.role_mismatch</td><td>itgc-rc-003</td><td>7</td><td>7</td></tr>
+<tr><td>access.role_mismatch</td><td>itgc-rc-004</td><td>7</td><td>7</td></tr>
+<tr><td>access.role_mismatch</td><td>itgc-rc-005</td><td>7</td><td>7</td></tr>
+<tr><td>access.service_account_no_owner</td><td>itgc-rc-001</td><td>7</td><td>7</td></tr>
+<tr><td>access.service_account_no_owner</td><td>itgc-rc-002</td><td>7</td><td>7</td></tr>
+<tr><td>access.service_account_no_owner</td><td>itgc-rc-003</td><td>7</td><td>7</td></tr>
+<tr><td>access.service_account_no_owner</td><td>itgc-rc-004</td><td>7</td><td>7</td></tr>
+<tr><td>access.service_account_no_owner</td><td>itgc-rc-005</td><td>7</td><td>7</td></tr>
+<tr><td>access.sod_conflict</td><td>itgc-rc-001</td><td>7</td><td>7</td></tr>
+<tr><td>access.sod_conflict</td><td>itgc-rc-002</td><td>7</td><td>7</td></tr>
+<tr><td>access.sod_conflict</td><td>itgc-rc-003</td><td>7</td><td>7</td></tr>
+<tr><td>access.sod_conflict</td><td>itgc-rc-004</td><td>7</td><td>7</td></tr>
+<tr><td>access.sod_conflict</td><td>itgc-rc-005</td><td>7</td><td>7</td></tr>
+<tr><td>access.terminated_active</td><td>itgc-rc-001</td><td>7</td><td>7</td></tr>
+<tr><td>access.terminated_active</td><td>itgc-rc-002</td><td>7</td><td>7</td></tr>
+<tr><td>access.terminated_active</td><td>itgc-rc-003</td><td>7</td><td>7</td></tr>
+<tr><td>access.terminated_active</td><td>itgc-rc-004</td><td>7</td><td>7</td></tr>
+<tr><td>access.terminated_active</td><td>itgc-rc-005</td><td>7</td><td>7</td></tr>
+<tr><td>change.deploy_without_ticket</td><td>itgc-rc-001</td><td>7</td><td>7</td></tr>
+<tr><td>change.deploy_without_ticket</td><td>itgc-rc-002</td><td>7</td><td>7</td></tr>
+<tr><td>change.deploy_without_ticket</td><td>itgc-rc-003</td><td>7</td><td>7</td></tr>
+<tr><td>change.deploy_without_ticket</td><td>itgc-rc-004</td><td>7</td><td>7</td></tr>
+<tr><td>change.deploy_without_ticket</td><td>itgc-rc-005</td><td>7</td><td>7</td></tr>
+<tr><td>change.emergency_no_review</td><td>itgc-rc-001</td><td>7</td><td>7</td></tr>
+<tr><td>change.emergency_no_review</td><td>itgc-rc-002</td><td>7</td><td>7</td></tr>
+<tr><td>change.emergency_no_review</td><td>itgc-rc-003</td><td>7</td><td>7</td></tr>
+<tr><td>change.emergency_no_review</td><td>itgc-rc-004</td><td>7</td><td>7</td></tr>
+<tr><td>change.emergency_no_review</td><td>itgc-rc-005</td><td>7</td><td>7</td></tr>
+<tr><td>change.freeze_violation</td><td>itgc-rc-001</td><td>7</td><td>7</td></tr>
+<tr><td>change.freeze_violation</td><td>itgc-rc-002</td><td>7</td><td>7</td></tr>
+<tr><td>change.freeze_violation</td><td>itgc-rc-003</td><td>7</td><td>7</td></tr>
+<tr><td>change.freeze_violation</td><td>itgc-rc-004</td><td>7</td><td>7</td></tr>
+<tr><td>change.freeze_violation</td><td>itgc-rc-005</td><td>7</td><td>7</td></tr>
+<tr><td>change.missing_approval</td><td>itgc-rc-001</td><td>7</td><td>7</td></tr>
+<tr><td>change.missing_approval</td><td>itgc-rc-002</td><td>7</td><td>7</td></tr>
+<tr><td>change.missing_approval</td><td>itgc-rc-003</td><td>7</td><td>7</td></tr>
+<tr><td>change.missing_approval</td><td>itgc-rc-004</td><td>7</td><td>7</td></tr>
+<tr><td>change.missing_approval</td><td>itgc-rc-005</td><td>7</td><td>7</td></tr>
+<tr><td>change.self_approval</td><td>itgc-rc-001</td><td>7</td><td>7</td></tr>
+<tr><td>change.self_approval</td><td>itgc-rc-002</td><td>7</td><td>7</td></tr>
+<tr><td>change.self_approval</td><td>itgc-rc-003</td><td>7</td><td>7</td></tr>
+<tr><td>change.self_approval</td><td>itgc-rc-004</td><td>7</td><td>7</td></tr>
+<tr><td>change.self_approval</td><td>itgc-rc-005</td><td>7</td><td>7</td></tr>
+<tr><td>change.stale_ticket</td><td>itgc-rc-001</td><td>7</td><td>7</td></tr>
+<tr><td>change.stale_ticket</td><td>itgc-rc-002</td><td>7</td><td>7</td></tr>
+<tr><td>change.stale_ticket</td><td>itgc-rc-003</td><td>7</td><td>7</td></tr>
+<tr><td>change.stale_ticket</td><td>itgc-rc-004</td><td>7</td><td>7</td></tr>
+<tr><td>change.stale_ticket</td><td>itgc-rc-005</td><td>7</td><td>7</td></tr>
+</tbody></table>
+<h2>Overall</h2>
+<dl>
+<dt>Outcome counts</dt><dd>13 pass / 0 exception / 0 inconclusive</dd>
+<dt>Overall outcome</dt><dd>pass</dd>
+</dl>
+</body></html>

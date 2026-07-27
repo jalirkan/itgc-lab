@@ -20,9 +20,11 @@ from . import catalogs, dates, roster
 from core.canonical import content_hash
 
 SERVICE_ROLE = {"crm": "crm-user", "deploy": "deploy-exec",
-                "erp": "erp-admin", "hris": "payroll-run"}
+                "dir": "dir-admin", "erp": "erp-admin",
+                "hris": "payroll-run", "mail": "mail-admin"}
 SHARED_ROLE = {"crm": "crm-user", "deploy": "dev-commit",
-               "erp": "fin-report", "hris": "hr-user"}
+               "dir": "user", "erp": "fin-report",
+               "hris": "hr-user", "mail": "user"}
 
 # Non-privileged roles offered as sanctioned cross-functional exceptions.
 EXCEPTION_ROLES = ["crm:crm-report", "erp:fin-report", "crm:crm-user"]

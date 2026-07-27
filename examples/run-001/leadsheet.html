@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>Engagement lead sheet — ITGC review</title>
+<style>
+body { font-family: Georgia, 'Times New Roman', serif; margin: 2rem auto;
+       max-width: 60rem; color: rgb(25, 30, 35); line-height: 1.45; }
+h1 { font-size: 1.6rem; border-bottom: 2px solid rgb(25, 30, 35);
+     padding-bottom: 0.4rem; }
+h2 { font-size: 1.15rem; margin-top: 1.6rem; }
+p.subtitle { color: rgb(90, 96, 102); font-style: italic; }
+table { border-collapse: collapse; margin: 0.6rem 0; }
+th, td { border: 1px solid rgb(170, 175, 180); padding: 0.3rem 0.55rem;
+         text-align: left; vertical-align: top; font-size: 0.92rem; }
+th { background: rgb(238, 240, 242); }
+blockquote { border-left: 4px solid rgb(170, 175, 180); margin: 0.6rem 0;
+             padding: 0.2rem 0.8rem; color: rgb(90, 96, 102); }
+dl { margin: 0.4rem 0; }
+dt { font-weight: bold; }
+dd { margin: 0 0 0.35rem 1.2rem; }
+</style>
+</head><body>
+<h1>Engagement lead sheet — ITGC review</h1>
+<p class="subtitle">Access review and change management, complete examinations</p>
+<h2>Identity</h2>
+<dl>
+<dt>Enterprise seed</dt><dd>run-001</dd>
+<dt>Snapshot</dt><dd>2026-06-30</dd>
+<dt>Window start</dt><dd>2024-12-30</dd>
+<dt>Generator version</dt><dd>0.1.0</dd>
+<dt>Workpaper generator</dt><dd>itgc-lab 0.1.0</dd>
+</dl>
+<h2>Scope and method</h2>
+<p>Two engines ran: an access review over the IAM export reconciled to the HR roster, and a change-management review over tickets and the deploy log.</p>
+<blockquote>Each procedure examines 100 percent of its declared population as of the snapshot. Counts are census facts about this population, not sample estimates, and are always stated with the population size.</blockquote>
+<h2>Procedure summary</h2>
+<table><thead><tr>
+<th>Rule</th>
+<th>Title</th>
+<th>Outcome</th>
+<th>Leads</th>
+<th>Population</th>
+</tr></thead><tbody>
+<tr><td>ACC-TERM</td><td>Terminated employees with active access</td><td>exception</td><td>4</td><td>20221</td></tr>
+<tr><td>ACC-ORPH</td><td>Accounts with no corresponding employee</td><td>exception</td><td>4</td><td>20225</td></tr>
+<tr><td>ACC-DORM</td><td>Dormant privileged access</td><td>exception</td><td>4</td><td>2656</td></tr>
+<tr><td>ACC-AUTH</td><td>Roles outside the authorization matrix</td><td>exception</td><td>8</td><td>20217</td></tr>
+<tr><td>ACC-SOD</td><td>Segregation-of-duties toxic combinations</td><td>exception</td><td>4</td><td>5406</td></tr>
+<tr><td>ACC-SVC</td><td>Service and shared account ownership</td><td>exception</td><td>4</td><td>18</td></tr>
+<tr><td>ACC-CERT</td><td>Access recertification staleness</td><td>exception</td><td>4</td><td>20243</td></tr>
+<tr><td>CHG-APPR</td><td>Deployed changes without approval</td><td>exception</td><td>4</td><td>695</td></tr>
+<tr><td>CHG-SELF</td><td>Changes approved by their own developer</td><td>exception</td><td>4</td><td>699</td></tr>
+<tr><td>CHG-EMER</td><td>Emergency changes without timely post-hoc review</td><td>exception</td><td>4</td><td>7</td></tr>
+<tr><td>CHG-TICK</td><td>Deploy-log entries with no matching ticket</td><td>exception</td><td>4</td><td>699</td></tr>
+<tr><td>CHG-FRZ</td><td>Deployments inside change-freeze windows</td><td>exception</td><td>4</td><td>699</td></tr>
+<tr><td>CHG-STAL</td><td>Approved changes never deployed</td><td>exception</td><td>4</td><td>8</td></tr>
+</tbody></table>
+<h2>Exceptions raised for follow-up</h2>
+<p>12 procedure(s) raised 52 lead(s).</p>
+<table><thead><tr>
+<th>Rule</th>
+<th>Subject</th>
+<th>Record id(s)</th>
+<th>Rationale</th>
+</tr></thead><tbody>
+<tr><td>ACC-TERM</td><td>E-e6aadc30ba</td><td>G-043abfeac3</td><td>Account remains active 246 days after the 2025-10-27 termination; the disablement SLA is 3 days.</td></tr>
+<tr><td>ACC-TERM</td><td>E-64cd70eb1b</td><td>G-046c4d451a</td><td>Account remains active 53 days after the 2026-05-08 termination; the disablement SLA is 3 days.</td></tr>
+<tr><td>ACC-TERM</td><td>E-fd59020e69</td><td>G-06f49ee78c</td><td>Account remains active 128 days after the 2026-02-22 termination; the disablement SLA is 3 days.</td></tr>
+<tr><td>ACC-TERM</td><td>E-1baf5fa6ac</td><td>G-1bcde552c0</td><td>Account remains active 240 days after the 2025-11-02 termination; the disablement SLA is 3 days.</td></tr>
+<tr><td>ACC-ORPH</td><td>E-a33962f9a2</td><td>G-05fabb2e1c</td><td>Active crm account is assigned to user id E-a33962f9a2, which does not appear in the HR roster for the period.</td></tr>
+<tr><td>ACC-ORPH</td><td>E-fd877fcfb0</td><td>G-5d5704c72f</td><td>Active crm account is assigned to user id E-fd877fcfb0, which does not appear in the HR roster for the period.</td></tr>
+<tr><td>ACC-ORPH</td><td>E-88fca28c91</td><td>G-77d78762bf</td><td>Active crm account is assigned to user id E-88fca28c91, which does not appear in the HR roster for the period.</td></tr>
+<tr><td>ACC-ORPH</td><td>E-522bd1d286</td><td>G-ad766a4af5</td><td>Active crm account is assigned to user id E-522bd1d286, which does not appear in the HR roster for the period.</td></tr>
+<tr><td>ACC-DORM</td><td>E-a740855567</td><td>G-6076dfc7c7</td><td>Privileged role deploy-admin on deploy last used 205 days before the snapshot; the dormancy threshold is 90 days.</td></tr>
+<tr><td>ACC-DORM</td><td>E-5caca08854</td><td>G-764630f184</td><td>Privileged role deploy-admin on deploy last used 166 days before the snapshot; the dormancy threshold is 90 days.</td></tr>
+<tr><td>ACC-DORM</td><td>E-80715e244e</td><td>G-8a9c08bbcf</td><td>Privileged role deploy-exec on deploy last used 163 days before the snapshot; the dormancy threshold is 90 days.</td></tr>
+<tr><td>ACC-DORM</td><td>E-09fd54a051</td><td>G-9f54f965ba</td><td>Privileged role deploy-admin on deploy last used 185 days before the snapshot; the dormancy threshold is 90 days.</td></tr>
+<tr><td>ACC-AUTH</td><td>E-69a80a2249</td><td>G-260294257f</td><td>Role deploy:deploy-approve is outside the authorization matrix for job function sales-operations-analyst, and no recorded exception applies.</td></tr>
+<tr><td>ACC-AUTH</td><td>E-3c00987e1e</td><td>G-38e4cad92e</td><td>Role erp:ap-approve is outside the authorization matrix for job function accounts-payable-clerk, and no recorded exception applies.</td></tr>
+<tr><td>ACC-AUTH</td><td>E-50aaf0f436</td><td>G-5f3f1a07b1</td><td>Role erp:ap-entry is outside the authorization matrix for job function controller, and no recorded exception applies.</td></tr>
+<tr><td>ACC-AUTH</td><td>E-936517a1b2</td><td>G-6eb0746f54</td><td>Role deploy:deploy-approve is outside the authorization matrix for job function security-analyst, and no recorded exception applies.</td></tr>
+<tr><td>ACC-AUTH</td><td>E-fd399d7f30</td><td>G-7cb9bf828d</td><td>Role deploy:dev-commit is outside the authorization matrix for job function system-administrator, and no recorded exception applies.</td></tr>
+<tr><td>ACC-AUTH</td><td>E-8103db51a4</td><td>G-81f59d1b88</td><td>Role deploy:deploy-approve is outside the authorization matrix for job function software-developer, and no recorded exception applies.</td></tr>
+<tr><td>ACC-AUTH</td><td>E-8d41aa1c75</td><td>G-8db4b9daab</td><td>Role erp:gl-post is outside the authorization matrix for job function system-administrator, and no recorded exception applies.</td></tr>
+<tr><td>ACC-AUTH</td><td>E-d64af21291</td><td>G-bad9242b73</td><td>Role deploy:dev-commit is outside the authorization matrix for job function security-analyst, and no recorded exception applies.</td></tr>
+<tr><td>ACC-SOD</td><td>E-3c00987e1e</td><td>G-38e4cad92e, G-cd098cda49</td><td>User holds both erp:ap-entry and erp:ap-approve. One identity can both create and approve a payable.</td></tr>
+<tr><td>ACC-SOD</td><td>E-50aaf0f436</td><td>G-5f3f1a07b1, G-b2e8b3abbb</td><td>User holds both erp:ap-entry and erp:ap-approve. One identity can both create and approve a payable.</td></tr>
+<tr><td>ACC-SOD</td><td>E-8103db51a4</td><td>G-755e0ee6c8, G-81f59d1b88</td><td>User holds both deploy:dev-commit and deploy:deploy-approve. One identity can both author a change and approve its release.</td></tr>
+<tr><td>ACC-SOD</td><td>E-8d41aa1c75</td><td>G-72967429e6, G-8db4b9daab</td><td>User holds both erp:gl-post and erp:erp-admin. One identity can both post journal entries and alter ERP controls.</td></tr>
+<tr><td>ACC-SVC</td><td>svc-dir-02</td><td>G-785adcbd16</td><td>Service account svc-dir-02 has no recorded owner.</td></tr>
+<tr><td>ACC-SVC</td><td>svc-crm-01</td><td>G-94436cead2</td><td>Service account svc-crm-01 has no recorded owner.</td></tr>
+<tr><td>ACC-SVC</td><td>shared-erp-01</td><td>G-ce6e20e761</td><td>Shared account shared-erp-01 has no recorded owner.</td></tr>
+<tr><td>ACC-SVC</td><td>svc-deploy-01</td><td>G-d011d072cb</td><td>Service account svc-deploy-01 has no recorded owner.</td></tr>
+<tr><td>ACC-CERT</td><td>E-ce6f6d8635</td><td>G-4ebfbd3625</td><td>Grant of user on dir was last recertified 528 days before the snapshot; the cycle is 365 days.</td></tr>
+<tr><td>ACC-CERT</td><td>E-a9e9ff7524</td><td>G-7253580e2f</td><td>Grant of crm-user on crm was last recertified 479 days before the snapshot; the cycle is 365 days.</td></tr>
+<tr><td>ACC-CERT</td><td>E-4641f88524</td><td>G-7f3b2b6b93</td><td>Grant of user on dir was last recertified 474 days before the snapshot; the cycle is 365 days.</td></tr>
+<tr><td>ACC-CERT</td><td>E-e6f948f037</td><td>G-c39b06f0a2</td><td>Grant of crm-user on crm was last recertified 516 days before the snapshot; the cycle is 365 days.</td></tr>
+<tr><td>CHG-APPR</td><td>CHG-42b2d71050</td><td>CHG-42b2d71050, DPL-952cfcb9b8</td><td>Change CHG-42b2d71050 on deploy was deployed 2025-10-27 with no approval recorded on the ticket.</td></tr>
+<tr><td>CHG-APPR</td><td>CHG-b7d7345e53</td><td>CHG-b7d7345e53, DPL-6d472a5703</td><td>Change CHG-b7d7345e53 on hris was deployed 2026-04-08 with no approval recorded on the ticket.</td></tr>
+<tr><td>CHG-APPR</td><td>CHG-d71439be17</td><td>CHG-d71439be17, DPL-3ee3e35549</td><td>Change CHG-d71439be17 on deploy was deployed 2025-02-21 with no approval recorded on the ticket.</td></tr>
+<tr><td>CHG-APPR</td><td>CHG-f8b56c1b61</td><td>CHG-f8b56c1b61, DPL-e28e0bba6e</td><td>Change CHG-f8b56c1b61 on hris was deployed 2026-02-23 with no approval recorded on the ticket.</td></tr>
+<tr><td>CHG-SELF</td><td>CHG-19e44d6feb</td><td>CHG-19e44d6feb, DPL-38710be701</td><td>Change CHG-19e44d6feb on deploy records E-358fd0b48c as both developer and approver.</td></tr>
+<tr><td>CHG-SELF</td><td>CHG-2cfced7ea3</td><td>CHG-2cfced7ea3, DPL-2f486bdf3d</td><td>Change CHG-2cfced7ea3 on hris records E-23c41499be as both developer and approver.</td></tr>
+<tr><td>CHG-SELF</td><td>CHG-78420afc49</td><td>CHG-78420afc49, DPL-70a01fff93</td><td>Change CHG-78420afc49 on deploy records E-2ac1fa74a9 as both developer and approver.</td></tr>
+<tr><td>CHG-SELF</td><td>CHG-eb3207cd7e</td><td>CHG-eb3207cd7e, DPL-da8058330a</td><td>Change CHG-eb3207cd7e on hris records E-50d1ec0025 as both developer and approver.</td></tr>
+<tr><td>CHG-EMER</td><td>CHG-27625fa5a6</td><td>CHG-27625fa5a6, DPL-d40b3c0cf3</td><td>Emergency change CHG-27625fa5a6 on crm was deployed 2026-03-28, and no post-hoc review is recorded within the 5-day window.</td></tr>
+<tr><td>CHG-EMER</td><td>CHG-cc5bce6c47</td><td>CHG-cc5bce6c47, DPL-ad99256c8d</td><td>Emergency change CHG-cc5bce6c47 on crm was deployed 2026-01-24, and no post-hoc review is recorded within the 5-day window.</td></tr>
+<tr><td>CHG-EMER</td><td>CHG-e32c950179</td><td>CHG-e32c950179, DPL-db3abcdee3</td><td>Emergency change CHG-e32c950179 on deploy was deployed 2025-01-18, and no post-hoc review is recorded within the 5-day window.</td></tr>
+<tr><td>CHG-EMER</td><td>CHG-eb027dc2ea</td><td>CHG-eb027dc2ea, DPL-2962a916b6</td><td>Emergency change CHG-eb027dc2ea on erp was deployed 2025-05-10, and no post-hoc review is recorded within the 5-day window.</td></tr>
+<tr><td>CHG-TICK</td><td>DPL-08fe2154e3</td><td>DPL-08fe2154e3</td><td>Deployment to hris on 2025-08-07 by E-d2bd3ca7a6 references ticket id CHG-7357527ca1, which does not exist in the ticket system.</td></tr>
+<tr><td>CHG-TICK</td><td>DPL-4cc0a0cdc6</td><td>DPL-4cc0a0cdc6</td><td>Deployment to deploy on 2025-08-26 by E-ee1a6af417 references ticket id CHG-223e8631de, which does not exist in the ticket system.</td></tr>
+<tr><td>CHG-TICK</td><td>DPL-d063886b3d</td><td>DPL-d063886b3d</td><td>Deployment to hris on 2026-03-04 by E-bdcbcc7d50 references ticket id CHG-6b653aee8d, which does not exist in the ticket system.</td></tr>
+<tr><td>CHG-TICK</td><td>DPL-d1d33cf719</td><td>DPL-d1d33cf719</td><td>Deployment to erp on 2025-08-06 by E-25057126d1 references ticket id CHG-62d624da92, which does not exist in the ticket system.</td></tr>
+<tr><td>CHG-FRZ</td><td>DPL-1be92174b3</td><td>CHG-d186ec64fd, DPL-1be92174b3</td><td>Deployment to erp on 2025-03-29 falls inside the freeze window 2025-03-29 to 2025-03-31 (Quarter-end change freeze).</td></tr>
+<tr><td>CHG-FRZ</td><td>DPL-1f861f5a59</td><td>CHG-b63615661c, DPL-1f861f5a59</td><td>Deployment to deploy on 2025-12-30 falls inside the freeze window 2025-12-29 to 2025-12-31 (Quarter-end change freeze).</td></tr>
+<tr><td>CHG-FRZ</td><td>DPL-7c773b8e54</td><td>CHG-85b190bd54, DPL-7c773b8e54</td><td>Deployment to hris on 2025-12-30 falls inside the freeze window 2025-12-29 to 2025-12-31 (Quarter-end change freeze).</td></tr>
+<tr><td>CHG-FRZ</td><td>DPL-940ae6b125</td><td>CHG-6c7bb19553, DPL-940ae6b125</td><td>Deployment to hris on 2025-03-30 falls inside the freeze window 2025-03-29 to 2025-03-31 (Quarter-end change freeze).</td></tr>
+</tbody></table>
+<h2>Review leads (recordkeeping)</h2>
+<p>Aged approved-but-undeployed tickets are listed apart from exceptions: they question recordkeeping, not directly a control&#x27;s operation.</p>
+<table><thead><tr>
+<th>Ticket</th>
+<th>Rationale</th>
+</tr></thead><tbody>
+<tr><td>CHG-2b5240978b</td><td>Change CHG-2b5240978b on deploy was approved 77 days before the snapshot and has no deployment record; the staleness threshold is 30 days. Review lead: confirm disposition with the change owner.</td></tr>
+<tr><td>CHG-73e125d3eb</td><td>Change CHG-73e125d3eb on crm was approved 80 days before the snapshot and has no deployment record; the staleness threshold is 30 days. Review lead: confirm disposition with the change owner.</td></tr>
+<tr><td>CHG-a12d70ff62</td><td>Change CHG-a12d70ff62 on hris was approved 83 days before the snapshot and has no deployment record; the staleness threshold is 30 days. Review lead: confirm disposition with the change owner.</td></tr>
+<tr><td>CHG-dc0736bb81</td><td>Change CHG-dc0736bb81 on hris was approved 60 days before the snapshot and has no deployment record; the staleness threshold is 30 days. Review lead: confirm disposition with the change owner.</td></tr>
+</tbody></table>
+<h2>Basis of reporting</h2>
+<blockquote>Every item in this pack is a lead for auditor follow-up. These procedures examine recorded data completely and conclude nothing beyond it; disposition belongs to the reviewer.</blockquote>
+</body></html>
