@@ -146,3 +146,22 @@ The card is also the regression detector (lab D-021): a test removes
 ACC-DORM and the dormant class drives to an exception while intact classes
 stay caught. No composite score; overall outcome by precedence (toolkit
 D-016). No wall-clock timestamps; identity is seeds + config echo.
+
+## D-015 · 2026-07-27 · The prior month is derived, not regenerated
+Re-running the generator with an earlier snapshot would produce a
+DIFFERENT organization (every draw shifts), so continuous mode gets its
+pair from one generated enterprise plus an `as_of(ent, day)` reducer that
+rebuilds the export the same org would have shown earlier: later events
+have not happened, usage/certification caps at the day, approvals dated
+later are absent. Two modelling assumptions are stated in the docstring
+rather than buried (steady usage; certification reverts to the
+provisioning date when the later cert has not happened yet). A consequence
+kept deliberately: an as-of view can catch the org MID-SLA — a mover
+inside the cleanup window shows residual access — so intermediate-date
+rule runs may carry leads the month-end view resolves. That is fidelity,
+and lead aging treats it correctly: pair-based ages are LOWER bounds
+(persisting = at least the window old), and the output says so. All
+deltas, aging counts, and drift-profile numbers are exact census facts
+stated with their populations — no intervals, because nothing is inferred
+(lab's exact-counts discipline; D-005 attaches intervals to inference
+only).
