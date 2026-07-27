@@ -1,0 +1,115 @@
+{
+  "note": "A mapping asserts that the rule produces evidence RELEVANT to the control - never that the control is satisfied. Every mapping carries its rationale; an unargued mapping cannot be defended in review.",
+  "cisa_source": "Domain/section/topic labels follow the ISACA CISA exam content outline as transcribed in the author's study system (verified 2026-07-26). Change-management rules sit in Domain 4 (and 3B for release scheduling), not Domain 5 - tags are honest to the outline rather than to this project's Domain 5 marketing.",
+  "rules": {
+    "ACC-TERM": {
+      "controls": [
+        {"id": "iso-27001-2022:A.5.18", "rationale": "Reconciles active grants against roster terminations, evidencing whether rights are removed when employment ends."},
+        {"id": "iso-27001-2022:A.6.5", "rationale": "Access persisting past termination is the technical residue the post-employment duties in this control govern."},
+        {"id": "cobit-2019:DSS05.04", "rationale": "Lifecycle evidence: accounts of departed users should leave the active population within the disablement SLA."},
+        {"id": "nist-csf-2.0:PR.AA-01", "rationale": "Tests the revocation half of identity lifecycle management against the authoritative roster."}
+      ],
+      "cisa": [{"domain": 5, "section": "A", "topic": "Identity and Access Management"}]
+    },
+    "ACC-ORPH": {
+      "controls": [
+        {"id": "iso-27001-2022:A.5.16", "rationale": "An active account with no roster identity evidences a gap in identity registration or retirement."},
+        {"id": "cobit-2019:DSS05.04", "rationale": "Every account must trace to a live business need; an unmatched account has none on record."},
+        {"id": "nist-csf-2.0:PR.AA-01", "rationale": "Organization-managed identities imply no unaccounted-for credentials in the population."}
+      ],
+      "cisa": [{"domain": 5, "section": "A", "topic": "Identity and Access Management"}]
+    },
+    "ACC-DORM": {
+      "controls": [
+        {"id": "iso-27001-2022:A.8.2", "rationale": "Privileged rights unused past the threshold evidence whether privileged allocation is justified and reviewed."},
+        {"id": "cobit-2019:DSS05.04", "rationale": "Dormant privileged access is lifecycle debt: granted, retained, and unaccounted for in current need."},
+        {"id": "nist-csf-2.0:PR.AA-05", "rationale": "Least privilege implies privileged rights that are actually exercised or removed on review."}
+      ],
+      "cisa": [{"domain": 5, "section": "A", "topic": "Identity and Access Management"}]
+    },
+    "ACC-AUTH": {
+      "controls": [
+        {"id": "iso-27001-2022:A.5.18", "rationale": "Grants compared to the function-based matrix evidence provisioning on business need, exception-managed otherwise."},
+        {"id": "cobit-2019:DSS06.03", "rationale": "Role-aligned privileges are the criterion this rule reconciles grant-by-grant against the matrix."},
+        {"id": "nist-csf-2.0:PR.AA-05", "rationale": "Policy-defined and reviewed permissions are tested directly against the recorded authorization policy."}
+      ],
+      "cisa": [{"domain": 5, "section": "A", "topic": "Identity and Access Management"}]
+    },
+    "ACC-SOD": {
+      "controls": [
+        {"id": "iso-27001-2022:A.5.3", "rationale": "Detects one identity holding both sides of a declared conflicting-duty pair across systems."},
+        {"id": "cobit-2019:DSS06.03", "rationale": "Authority levels and their required separations are tested against the declared toxic-pair matrix."},
+        {"id": "nist-csf-2.0:PR.AA-05", "rationale": "Separation of duties is named in this subcategory; the rule evidences its operation in granted access."}
+      ],
+      "cisa": [{"domain": 5, "section": "A", "topic": "Identity and Access Management"}]
+    },
+    "ACC-SVC": {
+      "controls": [
+        {"id": "iso-27001-2022:A.5.16", "rationale": "Non-human identities require sanctioned, current ownership; an unowned account evidences a registration gap."},
+        {"id": "cobit-2019:DSS05.04", "rationale": "Service and shared accounts are lifecycle-managed identities; ownership is the accountability anchor."},
+        {"id": "nist-csf-2.0:PR.AA-01", "rationale": "Credentials for services are organization-managed only if a live owner answers for them."}
+      ],
+      "cisa": [{"domain": 5, "section": "A", "topic": "Identity and Access Management"}]
+    },
+    "ACC-CERT": {
+      "controls": [
+        {"id": "iso-27001-2022:A.5.18", "rationale": "Recertification dates evidence the recurring review of access rights this control expects."},
+        {"id": "cobit-2019:DSS05.04", "rationale": "Periodic review is part of the access lifecycle; lapsed certification dates evidence the cycle not operating."},
+        {"id": "nist-csf-2.0:PR.AA-05", "rationale": "Reviewed permissions require a review cadence; staleness is measured against the declared cycle."}
+      ],
+      "cisa": [{"domain": 5, "section": "A", "topic": "Identity and Access Management"}]
+    },
+    "CHG-APPR": {
+      "controls": [
+        {"id": "iso-27001-2022:A.8.32", "rationale": "Deployments lacking recorded approval evidence changes travelling outside the controlled path."},
+        {"id": "cobit-2019:BAI06.01", "rationale": "Authorization-before-implementation is the practice tested by reconciling approvals to deploy dates."},
+        {"id": "nist-csf-2.0:PR.PS-01", "rationale": "Applied configuration management implies production changes carry recorded, prior authorization."}
+      ],
+      "cisa": [{"domain": 4, "section": "A", "topic": "IT Change, Configuration, and Patch Management"}]
+    },
+    "CHG-SELF": {
+      "controls": [
+        {"id": "iso-27001-2022:A.5.3", "rationale": "Developer-approves-own-change is a conflicting-duty pairing inside the change process."},
+        {"id": "iso-27001-2022:A.8.32", "rationale": "Arm's-length approval is part of the controlled change path this rule evidences."},
+        {"id": "cobit-2019:BAI06.01", "rationale": "Authorization at arm's length from the implementer is tested by the approver/developer identity match."},
+        {"id": "nist-csf-2.0:PR.AA-05", "rationale": "Separation of duties applies to change roles as much as to financial ones."}
+      ],
+      "cisa": [{"domain": 4, "section": "A", "topic": "IT Change, Configuration, and Patch Management"}]
+    },
+    "CHG-EMER": {
+      "controls": [
+        {"id": "iso-27001-2022:A.8.32", "rationale": "Expedited changes remain inside the controlled path only if reviewed promptly after the fact."},
+        {"id": "cobit-2019:BAI06.02", "rationale": "The emergency-change practice is tested directly: post-hoc review present, timely, and independent."},
+        {"id": "nist-csf-2.0:PR.PS-01", "rationale": "Emergency paths are part of applied configuration management practice, not an exemption from it."}
+      ],
+      "cisa": [{"domain": 4, "section": "A", "topic": "IT Change, Configuration, and Patch Management"}]
+    },
+    "CHG-TICK": {
+      "controls": [
+        {"id": "iso-27001-2022:A.8.32", "rationale": "A deploy with no ticket is a change with no recorded request or approval - outside the controlled path entirely."},
+        {"id": "cobit-2019:BAI06.03", "rationale": "Tracking through closure fails loudly when the deployment log holds entries the ticket system never saw."},
+        {"id": "nist-csf-2.0:PR.PS-01", "rationale": "Log-versus-ticket reconciliation evidences whether configuration management practice covers all deployments."}
+      ],
+      "cisa": [{"domain": 4, "section": "A", "topic": "IT Change, Configuration, and Patch Management"}]
+    },
+    "CHG-FRZ": {
+      "controls": [
+        {"id": "iso-27001-2022:A.8.32", "rationale": "Declared freeze windows are part of the controlled schedule; deployments inside them evidence the schedule not operating."},
+        {"id": "cobit-2019:BAI06.01", "rationale": "A deployment during a declared freeze proceeded against the standing authorization calendar."},
+        {"id": "nist-csf-2.0:PR.PS-01", "rationale": "Freeze adherence is applied configuration management on the calendar dimension."}
+      ],
+      "cisa": [
+        {"domain": 4, "section": "A", "topic": "IT Change, Configuration, and Patch Management"},
+        {"domain": 3, "section": "B", "topic": "Implementation Configuration and Release Management"}
+      ]
+    },
+    "CHG-STAL": {
+      "controls": [
+        {"id": "iso-27001-2022:A.8.32", "rationale": "Approved-but-undeployed tickets aged past threshold evidence recordkeeping drift in the change pipeline."},
+        {"id": "cobit-2019:BAI06.03", "rationale": "Tracking through closure is the practice tested; a stalled approved ticket is an untracked ending."},
+        {"id": "nist-csf-2.0:PR.PS-01", "rationale": "Applied practice keeps the recorded pipeline and reality reconciled; stale approvals measure the gap."}
+      ],
+      "cisa": [{"domain": 4, "section": "A", "topic": "IT Change, Configuration, and Patch Management"}]
+    }
+  }
+}

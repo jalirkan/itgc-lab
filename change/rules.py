@@ -268,9 +268,9 @@ class FreezeViolation(Rule):
 class StaleTickets(Rule):
     rule_id = "CHG-STAL"
     title = "Approved changes never deployed"
-    criterion = ("An approved, undeployed ticket is a REVIEW LEAD — not a "
-                 "control failure by itself — once its approval is older "
-                 "than the staleness threshold.")
+    criterion = ("An approved, undeployed ticket is a REVIEW LEAD — a "
+                 "recordkeeping question, not by itself an exception — "
+                 "once its approval is older than the staleness threshold.")
     population_desc = ("All change tickets with an approval recorded and "
                        "no matching deploy-log entry (complete "
                        "examination).")

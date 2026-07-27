@@ -1,0 +1,38 @@
+{
+  "verified": {
+    "identifiers_checked": "2026-07-27",
+    "method": "Control identifiers and titles checked against public framework indexes (ISO 27001:2022 Annex A control list; NIST CSF 2.0 subcategory references; COBIT 2019 objective/practice references). Every summary below is ORIGINAL to this project and deliberately one line.",
+    "partiality": "These catalogs list only controls this lab can produce technical evidence for. A control's absence is not a statement about it."
+  },
+  "catalogs": {
+    "iso-27001-2022": {
+      "name": "ISO/IEC 27001:2022 Annex A",
+      "controls": {
+        "A.5.3": "Conflicting duties are separated so no single identity can initiate, approve, and conceal the same transaction or change.",
+        "A.5.16": "Identities are unique, tied to a person or a sanctioned non-human use, and retired when no longer needed.",
+        "A.5.18": "Access rights are provisioned on business need and removed or adjusted promptly at termination or role change.",
+        "A.6.5": "Duties that survive termination or role change are defined and enforced, including the removal of what should not survive.",
+        "A.8.2": "Privileged rights are restricted, individually justified, and reviewed more often than ordinary access.",
+        "A.8.32": "System changes follow a controlled path: recorded request, arm's-length approval, and traceable deployment."
+      }
+    },
+    "cobit-2019": {
+      "name": "COBIT 2019 (ISACA)",
+      "controls": {
+        "DSS05.04": "User identities and logical access are managed across their lifecycle so every account traces to a live business need.",
+        "DSS06.03": "Roles, access privileges, and authority levels stay aligned with assigned duties and their required separations.",
+        "BAI06.01": "Change requests are evaluated and authorized before implementation, at arm's length from the implementer.",
+        "BAI06.02": "Emergency changes take an expedited path whose authorization and review complete promptly after the fact.",
+        "BAI06.03": "Change status is tracked and reported through closure so no request quietly stalls or disappears."
+      }
+    },
+    "nist-csf-2.0": {
+      "name": "NIST Cybersecurity Framework 2.0",
+      "controls": {
+        "PR.AA-01": "Identities and credentials for users, services, and hardware are issued, managed, and revoked by the organization.",
+        "PR.AA-05": "Access permissions are policy-defined, enforced, and reviewed, incorporating least privilege and separation of duties.",
+        "PR.PS-01": "Configuration management practices are established and applied so platforms stay in known, approved states."
+      }
+    }
+  }
+}

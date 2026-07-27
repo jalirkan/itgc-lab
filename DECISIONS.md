@@ -165,3 +165,43 @@ deltas, aging counts, and drift-profile numbers are exact census facts
 stated with their populations — no intervals, because nothing is inferred
 (lab's exact-counts discipline; D-005 attaches intervals to inference
 only).
+
+## D-016 · 2026-07-27 · Framework references: verified ids, original words, honest domains
+Control identifiers were checked against public framework indexes on
+2026-07-27 (ISO/IEC 27001:2022 Annex A titles confirmed via a full
+published control list — which caught that A.8.2 is Privileged access
+rights, not configuration management; NIST CSF 2.0 subcategory wording
+confirmed; COBIT 2019 practice ids cross-referenced). Catalogs store the
+id plus an ORIGINAL one-liner, enforced structurally per toolkit D-025:
+a 220-character cap and a quoted-span scan, both with companion tests
+proving they fire on simulated pastes. Catalogs are partial and say so
+(toolkit D-026); a mapping asserts evidence RELEVANCE, never control
+satisfaction, and cannot exist without a written rationale (toolkit
+D-027); coverage prints each mapped rule's outcome next to the control
+and lists unmapped catalog controls rather than omitting them.
+
+Deviation from PLAN, recorded: PLAN asked for "CISA Domain 5 topic tags"
+on every rule, but the ISACA outline (as transcribed and verified in the
+author's own study system) puts change management in Domain 4A and
+release management in 3B. Tags follow the outline, not the project's
+framing — mis-tagged study material would be worse than none. Access
+rules carry 5A; change rules carry 4A (CHG-FRZ also 3B). Enforced by
+test.
+
+## D-017 · 2026-07-27 · Renderer guards: leads-vocabulary, n-on-every-rate, offline HTML
+Per lab D-024 and toolkit D-029/D-030, one block model renders to
+Markdown and standalone HTML (embedded CSS, no external fetches — and no
+percent signs in the stylesheet, adopting the JE lab's lesson where the
+scanner flagged its own `width: 100%`). Both renderers refuse documents
+containing conclusory determinations OR incident language ("breach",
+"compromised", "attacker", "incident" — an access anomaly is an audit
+exception, not an incident declaration, extending D-003), with the 13
+planted-class identifiers allowlisted verbatim: ground truth may name
+what it planted; prose may not conclude it. Any rendered line with a
+percent sign must carry n. Companion tests prove every guard fires, in
+paragraphs and inside table cells. The guard drew blood during
+development: CHG-STAL's own criterion said "control failure" and was
+reworded — which is the guard working, recorded here so nobody weakens
+it to admit convenient phrasing later. Findings and scope limitations
+render in separate lead-sheet sections (toolkit D-032), and workpapers
+carry no wall-clock timestamps (lab D-019).
