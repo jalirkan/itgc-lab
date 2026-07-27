@@ -1,0 +1,20 @@
+# python
+__pycache__/
+*.pyc
+.venv/
+
+# no keys should ever be needed here
+.env
+.env*.local
+
+# generated enterprises and runs (examples/ manifests + packs stay committed;
+# large raw exports regenerate byte-identically from seed)
+/runs/
+/generated/
+examples/**/exports/
+*.db
+*.db-wal
+*.db-shm
+
+# os
+.DS_Store
