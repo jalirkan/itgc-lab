@@ -1,7 +1,7 @@
 # ITGC Monitoring Lab
 
-Third of a trilogy: [ai-audit-toolkit](../ai-audit-toolkit) audits AI systems,
-[audit-automation-lab](../audit-automation-lab) automates financial-statement
+Third of a trilogy: [ai-audit-toolkit](https://github.com/jalirkan/ai-audit-toolkit) audits AI systems,
+[audit-automation-lab](https://github.com/jalirkan/audit-automation-lab) automates financial-statement
 audit procedures — this lab automates **IT general controls** testing, the
 day-to-day substance of IT audit: user access reviews, segregation of duties,
 and change management. Demonstrated entirely on synthetic enterprise data and
