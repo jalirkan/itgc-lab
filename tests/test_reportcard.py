@@ -2,9 +2,10 @@ import unittest
 
 from core.canonical import canonical_bytes
 from core.stats import EXCEPTION, INCONCLUSIVE, wilson_interval
+from enterprise.violations import CLASSES
 from reportcard.card import (
     DEFAULT_N_SEEDS, DEFAULT_PLAN, DEFAULT_RECALL_FLOOR, _constituent_ids,
-    build_report_card,
+    _designed_rules, build_report_card,
 )
 
 SMALL_PLAN = {"access.orphan_account": 1, "change.stale_ticket": 1}
@@ -119,6 +120,128 @@ class BrokenRuleRegression(unittest.TestCase):
         self.assertEqual(card["overall_outcome"], EXCEPTION)
         self.assertEqual(card["identity"]["access_rules"],
                          [r.rule_id for r in broken])
+
+
+class BrokenRuleRegressionEveryClass(unittest.TestCase):
+    """D-014's regression check extended from one class to all thirteen:
+    every planted class names exactly one designed rule, and a battery
+    missing that rule must drive exactly that class to an exception while
+    every other class stays fully caught. The one documented exception is
+    access.sod_conflict, whose overlap with ACC-AUTH is intrinsic (D-009):
+    its regression rides designed-rule recall instead — see the last test."""
+
+    # Full plan at 2 per class, one seed: a missed class pools 0/2, whose
+    # Wilson upper bound (~0.66) sits decisively below the 0.9 floor, so
+    # EXCEPTION needs no larger pool — and thirteen broken-battery cards
+    # stay under half a second of suite time.
+    PLAN = {cls: 2 for cls in CLASSES}
+
+    @classmethod
+    def _card_without(cls, rule_id):
+        from access.rules import ACCESS_RULES
+        from change.rules import CHANGE_RULES
+        return build_report_card(
+            base_seed="itgc-break", n_seeds=1, plan=cls.PLAN,
+            access_rules=tuple(r for r in ACCESS_RULES
+                               if r.rule_id != rule_id),
+            change_rules=tuple(r for r in CHANGE_RULES
+                               if r.rule_id != rule_id))
+
+    def _assert_break_flips_only(self, target, rule_id):
+        card = self._card_without(rule_id)
+        by_cls = {c["class"]: c for c in card["classes"]}
+        broken = by_cls[target]
+        # The card records that nothing claims the class any more, and
+        # that nothing caught it — designed-rule or otherwise.
+        self.assertEqual(broken["designed_rules"], [])
+        self.assertEqual(broken["caught_any"], 0)
+        self.assertEqual(broken["caught_designed"], 0)
+        self.assertEqual(broken["decision"]["outcome"], EXCEPTION)
+        # Exactly that class: every intact class stays fully caught, and
+        # the target's is the only exception decision on the card.
+        for cls_name, c in by_cls.items():
+            if cls_name != target:
+                self.assertEqual(c["caught_any"], c["planted"],
+                                 "{0} after removing {1}".format(cls_name,
+                                                                 rule_id))
+        self.assertEqual(card["outcome_counts"][EXCEPTION], 1)
+        self.assertEqual(card["overall_outcome"], EXCEPTION)
+        # The identity echo shows the battery the card actually graded.
+        self.assertNotIn(rule_id, card["identity"]["access_rules"]
+                         + card["identity"]["change_rules"])
+
+    def test_designed_rule_map_is_one_to_one(self):
+        # The premise of breaking THE rule for a class: every planted
+        # class names exactly one designed rule, and none is unclaimed.
+        from access.rules import ACCESS_RULES
+        from change.rules import CHANGE_RULES
+        designed = _designed_rules(ACCESS_RULES + CHANGE_RULES)
+        self.assertEqual(set(designed), set(CLASSES))
+        for cls_name, rule_ids in designed.items():
+            self.assertEqual(len(rule_ids), 1, cls_name)
+
+    def test_terminated_active_flips_when_acc_term_is_removed(self):
+        self._assert_break_flips_only("access.terminated_active", "ACC-TERM")
+
+    def test_orphan_account_flips_when_acc_orph_is_removed(self):
+        self._assert_break_flips_only("access.orphan_account", "ACC-ORPH")
+
+    def test_dormant_privileged_flips_when_acc_dorm_is_removed(self):
+        self._assert_break_flips_only("access.dormant_privileged", "ACC-DORM")
+
+    def test_role_mismatch_flips_when_acc_auth_is_removed(self):
+        self._assert_break_flips_only("access.role_mismatch", "ACC-AUTH")
+
+    def test_service_account_flips_when_acc_svc_is_removed(self):
+        self._assert_break_flips_only("access.service_account_no_owner",
+                                      "ACC-SVC")
+
+    def test_recert_lapsed_flips_when_acc_cert_is_removed(self):
+        self._assert_break_flips_only("access.recert_lapsed", "ACC-CERT")
+
+    def test_missing_approval_flips_when_chg_appr_is_removed(self):
+        self._assert_break_flips_only("change.missing_approval", "CHG-APPR")
+
+    def test_self_approval_flips_when_chg_self_is_removed(self):
+        self._assert_break_flips_only("change.self_approval", "CHG-SELF")
+
+    def test_emergency_review_flips_when_chg_emer_is_removed(self):
+        self._assert_break_flips_only("change.emergency_no_review",
+                                      "CHG-EMER")
+
+    def test_ghost_deploy_flips_when_chg_tick_is_removed(self):
+        self._assert_break_flips_only("change.deploy_without_ticket",
+                                      "CHG-TICK")
+
+    def test_freeze_violation_flips_when_chg_frz_is_removed(self):
+        self._assert_break_flips_only("change.freeze_violation", "CHG-FRZ")
+
+    def test_stale_ticket_flips_when_chg_stal_is_removed(self):
+        self._assert_break_flips_only("change.stale_ticket", "CHG-STAL")
+
+    def test_sod_regression_rides_designed_recall_not_any_rule(self):
+        # The one class where the flip cannot be total: an added SoD role
+        # is usually also off-matrix (D-009 names the overlap), so with
+        # ACC-SOD removed ACC-AUTH still surfaces the added grant — and
+        # because the manifest names every constituent id (D-012), that
+        # counts as any-rule detection, not a false positive. At this
+        # pinned seed the overlap holds for every plant; "usually" is
+        # exactly why the class cannot join the strict flip above. The
+        # regression is still visible: designed-rule recall collapses to
+        # zero while any-rule recall stays intact.
+        card = self._card_without("ACC-SOD")
+        by_cls = {c["class"]: c for c in card["classes"]}
+        sod = by_cls["access.sod_conflict"]
+        self.assertEqual(sod["designed_rules"], [])
+        self.assertEqual(sod["caught_designed"], 0)
+        self.assertEqual(sod["caught_any"], sod["planted"])
+        # No class decides an exception: the any-rule card genuinely does
+        # not flip here, which is why this class is documented rather
+        # than forced into the pattern above.
+        self.assertEqual(card["outcome_counts"][EXCEPTION], 0)
+        self.assertNotEqual(card["overall_outcome"], EXCEPTION)
+        for cls_name, c in by_cls.items():
+            self.assertEqual(c["caught_any"], c["planted"], cls_name)
 
 
 class CardDeterminism(unittest.TestCase):
