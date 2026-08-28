@@ -28,10 +28,6 @@ jobs:
         # floor, and the interpreter the suite is developed against. Neither
         # is an upgrade of anything the repo states.
         python-version: ["3.10", "3.12"]
-    env:
-      # The socket guard written by the first step; every python step after it
-      # runs with the network denied.
-      PYTHONPATH: ${{ runner.temp }}/nonet
     steps:
       - uses: actions/checkout@v4
 
@@ -60,6 +56,13 @@ jobs:
           socket.create_connection = _blocked
           socket.getaddrinfo = _blocked
           PY
+          # Exported here so the self-check below actually exercises the
+          # guard, and written to GITHUB_ENV so every later step inherits it.
+          # It cannot be a job-level `env:` — the `runner` context is not
+          # available there, and a workflow that references it fails to load
+          # with no jobs and no logs, which is a miserable thing to debug.
+          export PYTHONPATH="$RUNNER_TEMP/nonet"
+          echo "PYTHONPATH=$RUNNER_TEMP/nonet" >> "$GITHUB_ENV"
           if python -c "import socket; socket.socket()" 2>/dev/null; then
             echo "the socket guard did not take effect" >&2
             exit 1
