@@ -1,0 +1,12 @@
+[project]
+name = "itgc-lab"
+version = "0.1.0"
+description = "Automates IT general controls testing (access reviews, SoD, change management) on synthetic enterprise data graded against planted ground truth"
+requires-python = ">=3.10"
+dependencies = []
+
+[dependency-groups]
+dev = ["pytest"]
+
+[tool.uv]
+package = false
