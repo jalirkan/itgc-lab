@@ -1,0 +1,106 @@
+# The lab's own verification, run by machine instead of by hand on one desk.
+# Every command below is one the repo already documents (README quick start,
+# PLAN conventions, D-018); nothing is installed and nothing is pinned to a
+# dependency, because "standard library only, no install, no network" is a
+# claim CI exists to prove rather than to restate.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # pyproject.toml and uv.lock declare requires-python = ">=3.10": the
+        # floor, and the interpreter the suite is developed against. Neither
+        # is an upgrade of anything the repo states.
+        python-version: ["3.10", "3.12"]
+    env:
+      # The socket guard written by the first step; every python step after it
+      # runs with the network denied.
+      PYTHONPATH: ${{ runner.temp }}/nonet
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Deny the network for the rest of the job
+        # Offline is a property of the lab, not of whichever machine happens
+        # to run it. A sitecustomize on PYTHONPATH makes every socket raise,
+        # so an accidental fetch fails the run instead of passing quietly on
+        # a runner that has connectivity.
+        run: |
+          mkdir -p "$RUNNER_TEMP/nonet"
+          cat > "$RUNNER_TEMP/nonet/sitecustomize.py" <<'PY'
+          """Refuse every socket: this lab is offline by construction."""
+          import socket
+
+
+          def _blocked(*_args, **_kwargs):
+              raise OSError(
+                  "network access attempted; this lab is offline by design")
+
+
+          socket.socket = _blocked
+          socket.create_connection = _blocked
+          socket.getaddrinfo = _blocked
+          PY
+          if python -c "import socket; socket.socket()" 2>/dev/null; then
+            echo "the socket guard did not take effect" >&2
+            exit 1
+          fi
+          echo "socket guard active"
+
+      - name: Full test suite
+        run: python -m unittest discover -s tests -t .
+
+      - name: Detection report card at the documented defaults
+        # The card is the thesis: per-class recall against planted truth, at
+        # 5 seeds x 7 per class. cli.py exits 0 whatever it measures — a card
+        # reports three outcomes, it is not a verdict — so the outcome is read
+        # back out of card.json here and a non-pass fails the run.
+        run: |
+          python cli.py reportcard --out "$RUNNER_TEMP/card"
+          python - "$RUNNER_TEMP/card/card.json" <<'PY'
+          import json
+          import sys
+
+          with open(sys.argv[1], encoding="ascii") as fh:
+              card = json.load(fh)
+          print("overall={0} {1}".format(
+              card["overall_outcome"], card["outcome_counts"]))
+          if card["overall_outcome"] != "pass":
+              sys.exit("report card came back " + card["overall_outcome"])
+          PY
+
+      - name: Committed example regenerates byte-identically
+        # examples/run-001 is committed evidence and a pure function of its
+        # seed (D-018). Rebuilding it here means drift between the code and
+        # the artifacts it published shows up as a diff, not as a stale
+        # figure in a README nobody re-read. Bulk exports are gitignored.
+        run: |
+          python cli.py example
+          git diff --exit-code -- examples
+
+      - name: README quick start
+        # The documented commands themselves, run as written, so the front
+        # page cannot rot into instructions that no longer work.
+        run: |
+          python cli.py generate --seed demo --out "$RUNNER_TEMP/demo" --plant-all 2
+          python cli.py review --dir "$RUNNER_TEMP/demo" --out "$RUNNER_TEMP/demo-review"
+          python cli.py continuous --dir "$RUNNER_TEMP/demo" --prior-days 30 --out "$RUNNER_TEMP/demo-cont"
