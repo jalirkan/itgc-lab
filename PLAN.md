@@ -97,7 +97,9 @@ itgc-lab/
 - README quick-start updated with real output.
 
 ## Stretch
-- Config-baseline checks (password/MFA policy snapshots vs stated policy).
+- ~~Config-baseline checks (password/MFA policy snapshots vs stated
+  policy).~~ Done: baseline engine, four planted classes, DECISIONS.md
+  D-019.
 - Cross-system correlation (same human, different account ids — matching as a
   labelled lexical screen).
 - Optional LLM explainer, adapter-gated as in the toolkit: narrative summaries

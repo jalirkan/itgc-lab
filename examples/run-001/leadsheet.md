@@ -12,7 +12,7 @@ Access review and change management, complete examinations
 
 ## Scope and method
 
-Two engines ran: an access review over the IAM export reconciled to the HR roster, and a change-management review over tickets and the deploy log.
+Three engines ran: an access review over the IAM export reconciled to the HR roster, a change-management review over tickets and the deploy log, and a configuration-baseline review comparing each system's recorded settings and MFA enrolments against the standard this organization states for itself.
 
 > Each procedure examines 100 percent of its declared population as of the snapshot. Counts are census facts about this population, not sample estimates, and are always stated with the population size.
 
@@ -33,10 +33,14 @@ Two engines ran: an access review over the IAM export reconciled to the HR roste
 | CHG-TICK | Deploy-log entries with no matching ticket | exception | 4 | 699 |
 | CHG-FRZ | Deployments inside change-freeze windows | exception | 4 | 699 |
 | CHG-STAL | Approved changes never deployed | exception | 4 | 8 |
+| CFG-PWD | Password policy against the stated standard | exception | 4 | 18 |
+| CFG-HARD | Lockout and session hardening against the stated standard | exception | 4 | 12 |
+| CFG-MFA | Multi-factor authentication enforcement settings | exception | 4 | 12 |
+| CFG-ENRL | MFA enrolment of privileged accounts | exception | 4 | 17430 |
 
 ## Exceptions raised for follow-up
 
-12 procedure(s) raised 52 lead(s).
+16 procedure(s) raised 68 lead(s).
 
 | Rule | Subject | Record id(s) | Rationale |
 | --- | --- | --- | --- |
@@ -92,6 +96,22 @@ Two engines ran: an access review over the IAM export reconciled to the HR roste
 | CHG-FRZ | DPL-1f861f5a59 | CHG-b63615661c, DPL-1f861f5a59 | Deployment to deploy on 2025-12-30 falls inside the freeze window 2025-12-29 to 2025-12-31 (Quarter-end change freeze). |
 | CHG-FRZ | DPL-7c773b8e54 | CHG-85b190bd54, DPL-7c773b8e54 | Deployment to hris on 2025-12-30 falls inside the freeze window 2025-12-29 to 2025-12-31 (Quarter-end change freeze). |
 | CHG-FRZ | DPL-940ae6b125 | CHG-6c7bb19553, DPL-940ae6b125 | Deployment to hris on 2025-03-30 falls inside the freeze window 2025-03-29 to 2025-03-31 (Quarter-end change freeze). |
+| CFG-PWD | erp | C-3de3faf093 | Setting password_min_length on erp is recorded as 10; the stated standard requires at least 12. |
+| CFG-PWD | mail | C-889886b419 | Setting password_max_age_days on mail is recorded as 365; the stated standard requires at most 90. |
+| CFG-PWD | mail | C-bfb7cfb026 | Setting password_history_depth on mail is recorded as 3; the stated standard requires at least 12. |
+| CFG-PWD | erp | C-cde016e966 | Setting password_max_age_days on erp is recorded as 180; the stated standard requires at most 90. |
+| CFG-HARD | dir | C-05ec679b93 | Setting account_lockout_threshold on dir is recorded as 25; the stated standard requires at most 5. |
+| CFG-HARD | hris | C-08de21c138 | Setting session_idle_timeout_minutes on hris is recorded as 60; the stated standard requires at most 15. |
+| CFG-HARD | deploy | C-284e54e9be | Setting account_lockout_threshold on deploy is recorded as 50; the stated standard requires at most 5. |
+| CFG-HARD | crm | C-af0ba699ef | Setting session_idle_timeout_minutes on crm is recorded as 480; the stated standard requires at most 15. |
+| CFG-MFA | dir | C-33a2265297 | Setting mfa_required_for_privileged on dir is recorded as False; the stated standard requires set to True. |
+| CFG-MFA | deploy | C-76e0da8538 | Setting mfa_required_for_privileged on deploy is recorded as False; the stated standard requires set to True. |
+| CFG-MFA | crm | C-984722dd21 | Setting mfa_required_for_privileged on crm is recorded as False; the stated standard requires set to True. |
+| CFG-MFA | deploy | C-c55430cade | Setting mfa_required_for_remote_access on deploy is recorded as False; the stated standard requires set to True. |
+| CFG-ENRL | E-436c7523b2 | M-a310832dda | Account E-436c7523b2 on dir holds privileged access and the enrolment register records no multi-factor enrolment for it; the stated standard requires MFA for privileged access. |
+| CFG-ENRL | E-e2f8337f62 | M-b9ec0da224 | Account E-e2f8337f62 on mail holds privileged access and the enrolment register records no multi-factor enrolment for it; the stated standard requires MFA for privileged access. |
+| CFG-ENRL | E-69c62b6ce1 | M-ea8a511c05 | Account E-69c62b6ce1 on deploy holds privileged access and the enrolment register records no multi-factor enrolment for it; the stated standard requires MFA for privileged access. |
+| CFG-ENRL | E-4c0437807e | M-f7b6a98a56 | Account E-4c0437807e on deploy holds privileged access and the enrolment register records no multi-factor enrolment for it; the stated standard requires MFA for privileged access. |
 
 ## Review leads (recordkeeping)
 

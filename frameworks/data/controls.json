@@ -1,6 +1,6 @@
 {
   "verified": {
-    "identifiers_checked": "2026-07-27",
+    "identifiers_checked": "2026-07-27; configuration-baseline controls added 2026-08-28",
     "method": "Control identifiers and titles checked against public framework indexes (ISO 27001:2022 Annex A control list; NIST CSF 2.0 subcategory references; COBIT 2019 objective/practice references). Every summary below is ORIGINAL to this project and deliberately one line.",
     "partiality": "These catalogs list only controls this lab can produce technical evidence for. A control's absence is not a statement about it."
   },
@@ -10,9 +10,12 @@
       "controls": {
         "A.5.3": "Conflicting duties are separated so no single identity can initiate, approve, and conceal the same transaction or change.",
         "A.5.16": "Identities are unique, tied to a person or a sanctioned non-human use, and retired when no longer needed.",
+        "A.5.17": "Authentication information is issued, held, and changed under rules strong enough that possessing it means what the access decision assumes.",
         "A.5.18": "Access rights are provisioned on business need and removed or adjusted promptly at termination or role change.",
         "A.6.5": "Duties that survive termination or role change are defined and enforced, including the removal of what should not survive.",
         "A.8.2": "Privileged rights are restricted, individually justified, and reviewed more often than ordinary access.",
+        "A.8.5": "Sign-in is protected by controls proportionate to what the account can reach, including additional factors where the risk warrants them.",
+        "A.8.9": "Security configuration of systems is defined, applied as a baseline, and monitored for drift away from the approved state.",
         "A.8.32": "System changes follow a controlled path: recorded request, arm's-length approval, and traceable deployment."
       }
     },

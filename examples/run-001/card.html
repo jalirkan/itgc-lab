@@ -29,6 +29,7 @@ dd { margin: 0 0 0.35rem 1.2rem; }
 <dt>Recall floor</dt><dd>0.9</dd>
 <dt>Access rules</dt><dd>ACC-TERM, ACC-ORPH, ACC-DORM, ACC-AUTH, ACC-SOD, ACC-SVC, ACC-CERT</dd>
 <dt>Change rules</dt><dd>CHG-APPR, CHG-SELF, CHG-EMER, CHG-TICK, CHG-FRZ, CHG-STAL</dd>
+<dt>Baseline rules</dt><dd>CFG-PWD, CFG-HARD, CFG-MFA, CFG-ENRL</dd>
 </dl>
 <h2>How to read this card</h2>
 <p>A planted condition counts as caught when any rule flags any of its constituent records; the designed-rule column counts only the rule built for that class. Recall pools across seeds and is decided against its Wilson interval: a thin pool renders inconclusive rather than parading a perfect rate.</p>
@@ -55,12 +56,17 @@ dd { margin: 0 0 0.35rem 1.2rem; }
 <tr><td>change.missing_approval</td><td>35</td><td>35</td><td>recall (any rule): change.missing_approval: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35)</td><td>35</td><td>pass</td></tr>
 <tr><td>change.self_approval</td><td>35</td><td>35</td><td>recall (any rule): change.self_approval: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35)</td><td>35</td><td>pass</td></tr>
 <tr><td>change.stale_ticket</td><td>35</td><td>35</td><td>recall (any rule): change.stale_ticket: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35)</td><td>35</td><td>pass</td></tr>
+<tr><td>config.hardening_drift</td><td>35</td><td>35</td><td>recall (any rule): config.hardening_drift: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35)</td><td>35</td><td>pass</td></tr>
+<tr><td>config.mfa_enrolment_gap</td><td>35</td><td>35</td><td>recall (any rule): config.mfa_enrolment_gap: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35)</td><td>35</td><td>pass</td></tr>
+<tr><td>config.mfa_not_enforced</td><td>35</td><td>35</td><td>recall (any rule): config.mfa_not_enforced: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35)</td><td>35</td><td>pass</td></tr>
+<tr><td>config.password_policy_drift</td><td>35</td><td>35</td><td>recall (any rule): config.password_policy_drift: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35)</td><td>35</td><td>pass</td></tr>
 </tbody></table>
 <h2>Precision and false positives</h2>
 <dl>
-<dt>Precision</dt><dd>record-level precision on planted populations: 630/630 = 100.0% (95% Wilson 99.4%-100.0%, n=630)</dd>
+<dt>Precision</dt><dd>record-level precision on planted populations: 770/770 = 100.0% (95% Wilson 99.5%-100.0%, n=770)</dd>
 <dt>Clean-population flags, access engine</dt><dd>0.0 per 10k (95% Wilson 0.0-10.5 per 10k, n=3660)</dd>
 <dt>Clean-population flags, change engine</dt><dd>0.0 per 10k (95% Wilson 0.0-18.1 per 10k, n=2118)</dd>
+<dt>Clean-population flags, baseline engine</dt><dd>0.0 per 10k (95% Wilson 0.0-13.0 per 10k, n=2944)</dd>
 </dl>
 <p>Correct reconciliations should flag nothing in a clean population; the benign look-alikes exist so that a wrong implementation measurably would. A nonzero clean-population rate is an implementation regression, not noise.</p>
 <h2>Per-seed stability</h2>
@@ -135,10 +141,30 @@ dd { margin: 0 0 0.35rem 1.2rem; }
 <tr><td>change.stale_ticket</td><td>itgc-rc-003</td><td>7</td><td>7</td></tr>
 <tr><td>change.stale_ticket</td><td>itgc-rc-004</td><td>7</td><td>7</td></tr>
 <tr><td>change.stale_ticket</td><td>itgc-rc-005</td><td>7</td><td>7</td></tr>
+<tr><td>config.hardening_drift</td><td>itgc-rc-001</td><td>7</td><td>7</td></tr>
+<tr><td>config.hardening_drift</td><td>itgc-rc-002</td><td>7</td><td>7</td></tr>
+<tr><td>config.hardening_drift</td><td>itgc-rc-003</td><td>7</td><td>7</td></tr>
+<tr><td>config.hardening_drift</td><td>itgc-rc-004</td><td>7</td><td>7</td></tr>
+<tr><td>config.hardening_drift</td><td>itgc-rc-005</td><td>7</td><td>7</td></tr>
+<tr><td>config.mfa_enrolment_gap</td><td>itgc-rc-001</td><td>7</td><td>7</td></tr>
+<tr><td>config.mfa_enrolment_gap</td><td>itgc-rc-002</td><td>7</td><td>7</td></tr>
+<tr><td>config.mfa_enrolment_gap</td><td>itgc-rc-003</td><td>7</td><td>7</td></tr>
+<tr><td>config.mfa_enrolment_gap</td><td>itgc-rc-004</td><td>7</td><td>7</td></tr>
+<tr><td>config.mfa_enrolment_gap</td><td>itgc-rc-005</td><td>7</td><td>7</td></tr>
+<tr><td>config.mfa_not_enforced</td><td>itgc-rc-001</td><td>7</td><td>7</td></tr>
+<tr><td>config.mfa_not_enforced</td><td>itgc-rc-002</td><td>7</td><td>7</td></tr>
+<tr><td>config.mfa_not_enforced</td><td>itgc-rc-003</td><td>7</td><td>7</td></tr>
+<tr><td>config.mfa_not_enforced</td><td>itgc-rc-004</td><td>7</td><td>7</td></tr>
+<tr><td>config.mfa_not_enforced</td><td>itgc-rc-005</td><td>7</td><td>7</td></tr>
+<tr><td>config.password_policy_drift</td><td>itgc-rc-001</td><td>7</td><td>7</td></tr>
+<tr><td>config.password_policy_drift</td><td>itgc-rc-002</td><td>7</td><td>7</td></tr>
+<tr><td>config.password_policy_drift</td><td>itgc-rc-003</td><td>7</td><td>7</td></tr>
+<tr><td>config.password_policy_drift</td><td>itgc-rc-004</td><td>7</td><td>7</td></tr>
+<tr><td>config.password_policy_drift</td><td>itgc-rc-005</td><td>7</td><td>7</td></tr>
 </tbody></table>
 <h2>Overall</h2>
 <dl>
-<dt>Outcome counts</dt><dd>13 pass / 0 exception / 0 inconclusive</dd>
+<dt>Outcome counts</dt><dd>17 pass / 0 exception / 0 inconclusive</dd>
 <dt>Overall outcome</dt><dd>pass</dd>
 </dl>
 </body></html>

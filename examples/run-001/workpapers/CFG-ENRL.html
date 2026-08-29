@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>Workpaper CFG-ENRL — MFA enrolment of privileged accounts</title>
+<style>
+body { font-family: Georgia, 'Times New Roman', serif; margin: 2rem auto;
+       max-width: 60rem; color: rgb(25, 30, 35); line-height: 1.45; }
+h1 { font-size: 1.6rem; border-bottom: 2px solid rgb(25, 30, 35);
+     padding-bottom: 0.4rem; }
+h2 { font-size: 1.15rem; margin-top: 1.6rem; }
+p.subtitle { color: rgb(90, 96, 102); font-style: italic; }
+table { border-collapse: collapse; margin: 0.6rem 0; }
+th, td { border: 1px solid rgb(170, 175, 180); padding: 0.3rem 0.55rem;
+         text-align: left; vertical-align: top; font-size: 0.92rem; }
+th { background: rgb(238, 240, 242); }
+blockquote { border-left: 4px solid rgb(170, 175, 180); margin: 0.6rem 0;
+             padding: 0.2rem 0.8rem; color: rgb(90, 96, 102); }
+dl { margin: 0.4rem 0; }
+dt { font-weight: bold; }
+dd { margin: 0 0 0.35rem 1.2rem; }
+</style>
+</head><body>
+<h1>Workpaper CFG-ENRL — MFA enrolment of privileged accounts</h1>
+<p class="subtitle">Outcome: exception</p>
+<h2>Identity</h2>
+<dl>
+<dt>Enterprise seed</dt><dd>run-001</dd>
+<dt>Snapshot</dt><dd>2026-06-30</dd>
+<dt>Window start</dt><dd>2024-12-30</dd>
+<dt>Generator version</dt><dd>0.1.0</dd>
+<dt>Workpaper generator</dt><dd>itgc-lab 0.1.0</dd>
+<dt>Rule</dt><dd>CFG-ENRL</dd>
+<dt>Outcome</dt><dd>exception</dd>
+</dl>
+<h2>Objective and criterion</h2>
+<p>An enrolment-register row is a lead when the account holds active privileged access, the stated standard requires multi-factor authentication for privileged access, and the register records no enrolment for it.</p>
+<h2>Population</h2>
+<p>The complete MFA enrolment register: one row per account holding at least one active grant, privileged and ordinary alike (complete examination).</p>
+<p>Records examined: 17430 of 17430.</p>
+<blockquote>Each procedure examines 100 percent of its declared population as of the snapshot. Counts are census facts about this population, not sample estimates, and are always stated with the population size.</blockquote>
+<h2>Policy thresholds applied</h2>
+<dl>
+<dt>mfa_required_for_privileged</dt><dd>set to True</dd>
+</dl>
+<h2>Results of examination</h2>
+<p>4 lead(s) raised from 17430 records examined.</p>
+<table><thead><tr>
+<th>Subject</th>
+<th>Record id(s)</th>
+<th>Rationale</th>
+</tr></thead><tbody>
+<tr><td>E-436c7523b2</td><td>M-a310832dda</td><td>Account E-436c7523b2 on dir holds privileged access and the enrolment register records no multi-factor enrolment for it; the stated standard requires MFA for privileged access.</td></tr>
+<tr><td>E-e2f8337f62</td><td>M-b9ec0da224</td><td>Account E-e2f8337f62 on mail holds privileged access and the enrolment register records no multi-factor enrolment for it; the stated standard requires MFA for privileged access.</td></tr>
+<tr><td>E-69c62b6ce1</td><td>M-ea8a511c05</td><td>Account E-69c62b6ce1 on deploy holds privileged access and the enrolment register records no multi-factor enrolment for it; the stated standard requires MFA for privileged access.</td></tr>
+<tr><td>E-4c0437807e</td><td>M-f7b6a98a56</td><td>Account E-4c0437807e on deploy holds privileged access and the enrolment register records no multi-factor enrolment for it; the stated standard requires MFA for privileged access.</td></tr>
+</tbody></table>
+<h2>Limitations</h2>
+<ul>
+<li>Ordinary accounts appear in this population and are not leads: the stated standard requires MFA for privileged access, so an unenrolled ordinary account is outside the criterion, not an exception to it.</li>
+<li>Enrolment is evidenced by the register; whether the enrolled factor is ever challenged at sign-in is not visible here.</li>
+<li>Accounts absent from the register are not examined by this procedure — register completeness against the access export is not reconciled here.</li>
+</ul>
+<h2>Framework references</h2>
+<blockquote>References indicate that this procedure produces evidence RELEVANT to the control. They never assert the control is satisfied.</blockquote>
+<table><thead><tr>
+<th>Control</th>
+<th>Original summary</th>
+<th>Relevance</th>
+</tr></thead><tbody>
+<tr><td>iso-27001-2022:A.8.2</td><td>Privileged rights are restricted, individually justified, and reviewed more often than ordinary access.</td><td>Privileged rights carry the strongest authentication expectation; the register shows which privileged accounts actually carry a second factor.</td></tr>
+<tr><td>iso-27001-2022:A.8.5</td><td>Sign-in is protected by controls proportionate to what the account can reach, including additional factors where the risk warrants them.</td><td>Examines the population the sign-in protection applies to, rather than the setting that requires it.</td></tr>
+<tr><td>nist-csf-2.0:PR.AA-01</td><td>Identities and credentials for users, services, and hardware are issued, managed, and revoked by the organization.</td><td>Credential management evidence: a privileged identity whose second factor was never issued is an unmanaged credential.</td></tr>
+</tbody></table>
+<h2>Certification study tags</h2>
+<ul>
+<li>CISA D5-A: Identity and Access Management</li>
+</ul>
+</body></html>

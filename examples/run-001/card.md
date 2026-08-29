@@ -10,6 +10,7 @@ Rules graded against planted ground truth across independent seeds
 - **Recall floor:** 0.9
 - **Access rules:** ACC-TERM, ACC-ORPH, ACC-DORM, ACC-AUTH, ACC-SOD, ACC-SVC, ACC-CERT
 - **Change rules:** CHG-APPR, CHG-SELF, CHG-EMER, CHG-TICK, CHG-FRZ, CHG-STAL
+- **Baseline rules:** CFG-PWD, CFG-HARD, CFG-MFA, CFG-ENRL
 
 ## How to read this card
 
@@ -34,12 +35,17 @@ A planted condition counts as caught when any rule flags any of its constituent 
 | change.missing_approval | 35 | 35 | recall (any rule): change.missing_approval: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35) | 35 | pass |
 | change.self_approval | 35 | 35 | recall (any rule): change.self_approval: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35) | 35 | pass |
 | change.stale_ticket | 35 | 35 | recall (any rule): change.stale_ticket: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35) | 35 | pass |
+| config.hardening_drift | 35 | 35 | recall (any rule): config.hardening_drift: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35) | 35 | pass |
+| config.mfa_enrolment_gap | 35 | 35 | recall (any rule): config.mfa_enrolment_gap: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35) | 35 | pass |
+| config.mfa_not_enforced | 35 | 35 | recall (any rule): config.mfa_not_enforced: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35) | 35 | pass |
+| config.password_policy_drift | 35 | 35 | recall (any rule): config.password_policy_drift: 35/35 = 100.0% (95% Wilson 90.1%-100.0%, n=35) | 35 | pass |
 
 ## Precision and false positives
 
-- **Precision:** record-level precision on planted populations: 630/630 = 100.0% (95% Wilson 99.4%-100.0%, n=630)
+- **Precision:** record-level precision on planted populations: 770/770 = 100.0% (95% Wilson 99.5%-100.0%, n=770)
 - **Clean-population flags, access engine:** 0.0 per 10k (95% Wilson 0.0-10.5 per 10k, n=3660)
 - **Clean-population flags, change engine:** 0.0 per 10k (95% Wilson 0.0-18.1 per 10k, n=2118)
+- **Clean-population flags, baseline engine:** 0.0 per 10k (95% Wilson 0.0-13.0 per 10k, n=2944)
 
 Correct reconciliations should flag nothing in a clean population; the benign look-alikes exist so that a wrong implementation measurably would. A nonzero clean-population rate is an implementation regression, not noise.
 
@@ -112,8 +118,28 @@ Correct reconciliations should flag nothing in a clean population; the benign lo
 | change.stale_ticket | itgc-rc-003 | 7 | 7 |
 | change.stale_ticket | itgc-rc-004 | 7 | 7 |
 | change.stale_ticket | itgc-rc-005 | 7 | 7 |
+| config.hardening_drift | itgc-rc-001 | 7 | 7 |
+| config.hardening_drift | itgc-rc-002 | 7 | 7 |
+| config.hardening_drift | itgc-rc-003 | 7 | 7 |
+| config.hardening_drift | itgc-rc-004 | 7 | 7 |
+| config.hardening_drift | itgc-rc-005 | 7 | 7 |
+| config.mfa_enrolment_gap | itgc-rc-001 | 7 | 7 |
+| config.mfa_enrolment_gap | itgc-rc-002 | 7 | 7 |
+| config.mfa_enrolment_gap | itgc-rc-003 | 7 | 7 |
+| config.mfa_enrolment_gap | itgc-rc-004 | 7 | 7 |
+| config.mfa_enrolment_gap | itgc-rc-005 | 7 | 7 |
+| config.mfa_not_enforced | itgc-rc-001 | 7 | 7 |
+| config.mfa_not_enforced | itgc-rc-002 | 7 | 7 |
+| config.mfa_not_enforced | itgc-rc-003 | 7 | 7 |
+| config.mfa_not_enforced | itgc-rc-004 | 7 | 7 |
+| config.mfa_not_enforced | itgc-rc-005 | 7 | 7 |
+| config.password_policy_drift | itgc-rc-001 | 7 | 7 |
+| config.password_policy_drift | itgc-rc-002 | 7 | 7 |
+| config.password_policy_drift | itgc-rc-003 | 7 | 7 |
+| config.password_policy_drift | itgc-rc-004 | 7 | 7 |
+| config.password_policy_drift | itgc-rc-005 | 7 | 7 |
 
 ## Overall
 
-- **Outcome counts:** 13 pass / 0 exception / 0 inconclusive
+- **Outcome counts:** 17 pass / 0 exception / 0 inconclusive
 - **Overall outcome:** pass

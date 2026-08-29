@@ -227,3 +227,82 @@ the same engines at scale in one committed run. Injector pool
 construction was made index-backed after the 5,000-employee run exposed
 an O(employees × grants) scan; selection order is unchanged and the
 whole suite plus byte-identity tests pin that.
+
+## D-019 · 2026-08-28 · Config baseline: the stated standard is the criterion, and the comparison is data
+PLAN's stretch item asked for password/MFA snapshots checked against
+stated policy. Three choices made it gradeable rather than merely
+plausible.
+
+First, the STANDARD ships as enterprise data (`policy.config_standard`),
+carrying a requirement VERB next to each value — `at_least`, `at_most`,
+`enabled`. Direction had to be data, not code, because the interesting
+benign look-alike here is a system configured STRICTER than required (a
+16-character password minimum where 12 is stated). An equality check
+flags every one of them; a direction-aware check flags none, and a test
+proves exactly that misfire, in the shape D-014 used for the rehire trap.
+The second look-alike is the ordinary account with no MFA enrolment: the
+standard requires MFA for privileged access, so those rows are outside
+the criterion, not exceptions to it — and per D-013 they sit INSIDE
+CFG-ENRL's population rather than being filtered out of it, because a
+temptation nobody is exposed to proves nothing. A missing standard, an
+absent export, and a requirement verb this code cannot interpret all
+refuse (D-008: missing configuration means refuse, not assume).
+
+Second, CFG-ENRL reads the STATED standard rather than the system's own
+MFA switch when deciding whether enrolment is required. Reading the
+switch was the obvious implementation and would have let one planted
+class mask another — a system whose `mfa_required_for_privileged` had
+drifted off would have excused every unenrolled account on it, so
+`config.mfa_not_enforced` would have silently suppressed
+`config.mfa_enrolment_gap` whenever the two landed on the same system.
+It is also the wrong audit criterion: the standard the organization
+states is what the population is measured against, and the system's own
+setting is evidence about that standard, not a substitute for it.
+CFG-MFA owns the switch, CFG-ENRL owns the population, and a test forces
+every switch off and asserts the enrolment population is unchanged.
+
+Third, the four planted classes are MUTATIONS of rows the clean
+generator already emitted, so every planted record keeps its natural-key
+id (D-007) and a test asserts the planted and clean exports carry
+identical id lists in identical order, with exactly the manifest's rows
+differing. Ground truth is the mutated ROW — `config_ids` /
+`enrolment_ids` — never the system it sits on: a manifest naming a
+system would grade every setting on that system as a free catch, which
+is the whole-population failure D-012 exists to prevent. Class pools
+were sized before the roster was fixed: seven settings per system across
+six systems gives 18 password rows, 12 hardening rows, 12 MFA-enforcement
+rows, and 123 privileged accounts, so the card's 7-per-class-per-seed
+plan has a real pool for every class rather than a floor that had to be
+lowered to fit.
+
+Recorded rather than smoothed over: adding CFG-ENRL to ISO A.8.2 changed
+what a threshold-wipe leaves established there. A.8.2 used to render
+inconclusive when ACC-DORM refused; CFG-ENRL, which also evidences it,
+needs no scalar threshold and still runs, so the control now renders
+no-exceptions-noted. The refusal
+test moved to A.6.5, which ACC-TERM evidences alone, and the A.8.2
+behaviour is asserted explicitly instead of quietly dropped.
+
+CISA tags straddle two domains for the first time and say why: the
+settings these rules read are configuration items (4A, whose verified
+topic label literally names Configuration Management), and every one of
+those settings governs authentication or access (5A). CFG-ENRL examines
+an identity population rather than a configuration item and carries 5A
+alone; the test asserts that split per rule rather than per prefix.
+
+Framework identifiers, with the provenance stated honestly: three ISO/IEC
+27001:2022 Annex A controls were added — A.5.17 (Authentication
+information), A.8.5 (Secure authentication), A.8.9 (Configuration
+management). They come from the same published Annex A control list
+D-016 worked from, but unlike that batch they were NOT re-checked against
+an online index, because this lab is offline by design and the check
+could not be run here. `identifiers_checked` on controls.json records the
+second date separately rather than letting the new ids inherit the old
+verification. Nothing else was added: COBIT and NIST mappings reuse ids
+already verified in D-016.
+
+The continuous mode deliberately gains nothing. A baseline observed only
+at the snapshot has no history to reduce, so `as_of` emits no `configs`
+artifact and the baseline rules refuse on a reduced export rather than
+carrying today's settings backwards — an absence that reports itself
+instead of manufacturing evidence for a date nobody sampled.

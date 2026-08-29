@@ -15,13 +15,17 @@ Discipline adopted from the siblings (DECISIONS.md D-002/D-007/D-009/D-010):
   lapse). Where overlap is intrinsic — an added SoD role is usually also
   off-matrix — the manifest note says so.
 - Benign look-alikes are protected: sanctioned-exception grants are never
-  mutated, and emergency/stale plants are additions so the documented
-  benign populations survive injection intact.
+  mutated, emergency/stale plants are additions so the documented benign
+  populations survive injection intact, and the configuration classes
+  never touch a setting configured stricter than the standard or an
+  ordinary account's enrolment row.
 """
 
 import copy
 
 from . import catalogs, dates, roster
+from .baseline import (HARDENING_SETTINGS, MFA_SETTINGS, PASSWORD_SETTINGS,
+                       meets)
 from .iam import _account_id, _grant_id, _mk_grant  # same id derivations
 from .tickets import _deploy_id, _mk_ticket, _ticket_id, _weighted_system, in_freeze
 from core import rng as rngmod
@@ -51,7 +55,13 @@ CHANGE_CLASSES = (
     "change.freeze_violation",
     "change.stale_ticket",
 )
-CLASSES = ACCESS_CLASSES + CHANGE_CLASSES
+CONFIG_CLASSES = (
+    "config.password_policy_drift",
+    "config.hardening_drift",
+    "config.mfa_not_enforced",
+    "config.mfa_enrolment_gap",
+)
+CLASSES = ACCESS_CLASSES + CHANGE_CLASSES + CONFIG_CLASSES
 
 
 def _protected_grant_ids(ent):
@@ -64,6 +74,12 @@ def _protected_grant_ids(ent):
 
 def _employees_by_id(ent):
     return {e["employee_id"]: e for e in ent["roster"]["employees"]}
+
+
+def _rehired_ids(ent):
+    """Employees carrying a rehire event — the D-004 benign look-alike."""
+    return {e["employee_id"] for e in ent["roster"]["employees"]
+            if any(ev["event"] == "rehire" for ev in e["history"])}
 
 
 def _sysadmin_ids(ent):
@@ -90,6 +106,10 @@ class _Ctx:
         self.used_grants = set(_protected_grant_ids(ent))
         self.used_tickets = set()
         self.used_users = set()
+        self.used_configs = set()
+        self.used_enrolments = set()
+        self.standard = ent["policy"]["config_standard"]
+        self.rehired = _rehired_ids(ent)
         self.emps = _employees_by_id(ent)
         self.matrix = catalogs.authorization_matrix()
         self.sod_pairs = catalogs.sod_matrix()["pairs"]
@@ -112,6 +132,14 @@ class _Ctx:
     @property
     def deploys(self):
         return self.ent["deploys"]["deploys"]
+
+    @property
+    def settings(self):
+        return self.ent["configs"]["settings"]
+
+    @property
+    def enrolments(self):
+        return self.ent["configs"]["mfa_enrolments"]
 
     def register_grant(self, g):
         if g["user_id"] is not None:
@@ -511,6 +539,123 @@ def _plant_stale_ticket(ctx):
     }
 
 
+# --- config-baseline plants ----------------------------------------------
+#
+# All four are MUTATIONS of rows the clean generator already emitted, so
+# every planted record keeps its natural-key id and nothing about a row's
+# position in the canonical ordering betrays that it was touched (D-007).
+# Each introduces exactly one property: a drifted setting value does not
+# also change what the standard states, and an enrolment gap does not
+# touch the account's grants. The MFA register is built from the CLEAN
+# population and injection deliberately does not backfill it, so accounts
+# that planted grants create have no register row; no rule reconciles
+# register completeness against the access export, so that leaves no
+# signal for any rule to pick up (CFG-ENRL's limitations say so).
+
+_DRIFT_VALUES = {
+    "account_lockout_threshold": (10, 25, 50),
+    "password_history_depth": (0, 3, 5),
+    "password_max_age_days": (180, 270, 365),
+    "password_min_length": (6, 8, 10),
+    "session_idle_timeout_minutes": (60, 240, 480),
+}
+
+
+def _drift_a_setting(cls, names, needed_msg):
+    """Build a planter that moves one recorded setting to a value the
+    stated standard rejects. The two numeric-drift classes differ only in
+    which settings they own, so they share this body: a divergence in how
+    they read the standard would be a divergence in ground truth."""
+
+    def plant(ctx):
+        pool = sorted(s["config_id"] for s in ctx.settings
+                      if s["setting"] in names
+                      and s["config_id"] not in ctx.used_configs)
+        cid = _pick(ctx.rng, pool, cls, needed_msg)
+        row = next(s for s in ctx.settings if s["config_id"] == cid)
+        spec = ctx.standard[row["setting"]]
+        drifted = ctx.rng.choice(_DRIFT_VALUES[row["setting"]])
+        if meets(spec, drifted):
+            # A "planted" value that still satisfies the standard would
+            # be an entry the manifest claims and the data does not
+            # exhibit — louder to fail here than to grade it later.
+            raise InjectionError(
+                "{0}: drifted value {1} for {2} still meets the stated "
+                "standard".format(cls, drifted, row["setting"]))
+        was = row["value"]
+        row["value"] = drifted
+        ctx.used_configs.add(cid)
+        return {
+            "refs": {"config_ids": [cid], "system": row["system"],
+                     "setting": row["setting"]},
+            "note": "Planted: {0} on {1} recorded as {2} (was {3}), "
+                    "against a stated standard of {4} {5}.".format(
+                        row["setting"], row["system"], drifted, was,
+                        spec["require"], spec["value"]),
+        }
+
+    return plant
+
+
+_plant_password_policy_drift = _drift_a_setting(
+    "config.password_policy_drift", PASSWORD_SETTINGS,
+    "password-policy settings")
+_plant_hardening_drift = _drift_a_setting(
+    "config.hardening_drift", HARDENING_SETTINGS,
+    "lockout or session settings")
+
+
+def _plant_mfa_not_enforced(ctx):
+    pool = sorted(s["config_id"] for s in ctx.settings
+                  if s["setting"] in MFA_SETTINGS
+                  and s["value"] is True
+                  and s["config_id"] not in ctx.used_configs)
+    cid = _pick(ctx.rng, pool, "config.mfa_not_enforced",
+                "enabled MFA enforcement settings")
+    row = next(s for s in ctx.settings if s["config_id"] == cid)
+    row["value"] = False
+    ctx.used_configs.add(cid)
+    return {
+        "refs": {"config_ids": [cid], "system": row["system"],
+                 "setting": row["setting"]},
+        "note": "Planted: {0} on {1} recorded as not enabled, against a "
+                "stated standard that requires it. The enrolment "
+                "population is unaffected: CFG-ENRL reads the stated "
+                "standard, not this switch.".format(
+                    row["setting"], row["system"]),
+    }
+
+
+def _plant_mfa_enrolment_gap(ctx):
+    # Rehires are excluded structurally rather than by luck: a benign
+    # look-alike that a plant has been laid on top of is no longer clean
+    # evidence about anything (D-004).
+    pool = sorted(e["enrolment_id"] for e in ctx.enrolments
+                  if e["privileged"] and e["enrolled"]
+                  and e["enrolment_id"] not in ctx.used_enrolments
+                  and e["user_id"] not in ctx.used_users
+                  and e["user_id"] not in ctx.rehired)
+    eid = _pick(ctx.rng, pool, "config.mfa_enrolment_gap",
+                "enrolled privileged accounts")
+    row = next(e for e in ctx.enrolments if e["enrolment_id"] == eid)
+    row["enrolled"] = False
+    row["method"] = None
+    row["enrolled_date"] = None
+    ctx.used_enrolments.add(eid)
+    if row["user_id"]:
+        ctx.used_users.add(row["user_id"])
+    subject = row["account_name"] or row["user_id"]
+    return {
+        "refs": {"enrolment_ids": [eid], "system": row["system"],
+                 "account_id": row["account_id"],
+                 "user_id": row["user_id"]},
+        "note": "Planted: privileged account {0} on {1} carries no "
+                "multi-factor enrolment. The account's grants are "
+                "untouched; only the enrolment register changes.".format(
+                    subject, row["system"]),
+    }
+
+
 _PLANTERS = {
     "access.terminated_active": _plant_terminated_active,
     "access.orphan_account": _plant_orphan_account,
@@ -525,6 +670,10 @@ _PLANTERS = {
     "change.deploy_without_ticket": _plant_deploy_without_ticket,
     "change.freeze_violation": _plant_freeze_violation,
     "change.stale_ticket": _plant_stale_ticket,
+    "config.password_policy_drift": _plant_password_policy_drift,
+    "config.hardening_drift": _plant_hardening_drift,
+    "config.mfa_not_enforced": _plant_mfa_not_enforced,
+    "config.mfa_enrolment_gap": _plant_mfa_enrolment_gap,
 }
 
 

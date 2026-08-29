@@ -96,10 +96,11 @@ def rule_workpaper(result, ent):
     )
 
 
-def lead_sheet(access_results, change_results, ent):
+def lead_sheet(access_results, change_results, baseline_results, ent):
     """Engagement lead sheet: exceptions, review leads, and scope
     limitations, separated."""
-    everything = list(access_results) + list(change_results)
+    everything = (list(access_results) + list(change_results)
+                  + list(baseline_results))
     summary_rows = [[r.rule_id, r.title, r.outcome, len(r.findings),
                      r.population_n if r.refusal_reason is None else "—"]
                     for r in everything]
@@ -113,9 +114,12 @@ def lead_sheet(access_results, change_results, ent):
     sections = [
         section("Identity", _identity_kv(ent)),
         section("Scope and method", p(
-            "Two engines ran: an access review over the IAM export "
-            "reconciled to the HR roster, and a change-management review "
-            "over tickets and the deploy log."), note(COMPLETE_EXAM_NOTE)),
+            "Three engines ran: an access review over the IAM export "
+            "reconciled to the HR roster, a change-management review over "
+            "tickets and the deploy log, and a configuration-baseline "
+            "review comparing each system's recorded settings and MFA "
+            "enrolments against the standard this organization states for "
+            "itself."), note(COMPLETE_EXAM_NOTE)),
         section("Procedure summary",
                 table(["Rule", "Title", "Outcome", "Leads", "Population"],
                       summary_rows)),
@@ -194,6 +198,7 @@ def card_doc(card):
             ("Recall floor", ident["recall_floor"]),
             ("Access rules", ", ".join(ident["access_rules"])),
             ("Change rules", ", ".join(ident["change_rules"])),
+            ("Baseline rules", ", ".join(ident["baseline_rules"])),
         ])),
         section("How to read this card", p(
             "A planted condition counts as caught when any rule flags any "
@@ -215,6 +220,8 @@ def card_doc(card):
              card["clean_false_positives"]["access"]["per_10k"]["rendered"]),
             ("Clean-population flags, change engine",
              card["clean_false_positives"]["change"]["per_10k"]["rendered"]),
+            ("Clean-population flags, baseline engine",
+             card["clean_false_positives"]["baseline"]["per_10k"]["rendered"]),
         ]), p(
             "Correct reconciliations should flag nothing in a clean "
             "population; the benign look-alikes exist so that a wrong "

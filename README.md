@@ -4,7 +4,7 @@ Third of a trilogy: [ai-audit-toolkit](https://github.com/jalirkan/ai-audit-tool
 [audit-automation-lab](https://github.com/jalirkan/audit-automation-lab) automates financial-statement
 audit procedures — this lab automates **IT general controls** testing, the
 day-to-day substance of IT audit: user access reviews, segregation of duties,
-and change management. Demonstrated entirely on synthetic enterprise data and
+change management, and configuration baselines. Demonstrated entirely on synthetic enterprise data and
 graded against planted ground truth, so the lab's own detection rates are
 measured, never asserted.
 
@@ -36,7 +36,7 @@ python cli.py example                          # rebuild examples/run-001
   deploy log with freeze windows, an authorization matrix, an SoD matrix, an
   exceptions register, and a policy artifact carrying every threshold. Same
   seed, same bytes — verified across processes.
-- **Planted-violation injector** — 13 violation classes on an isolated RNG
+- **Planted-violation injector** — 17 violation classes on an isolated RNG
   stream; the manifest is the only ground truth; ids carry no positional
   artifact; each plant introduces exactly one property.
 - **Access-review engine** — terminated-but-active (rehire-safe), orphaned
@@ -46,6 +46,13 @@ python cli.py example                          # rebuild examples/run-001
 - **Change-management engine** — deployed without approval, self-approval,
   emergency changes without timely independent review, deploys with no
   ticket, freeze-window deploys, stale approved tickets (review leads).
+- **Config-baseline engine** — each system's recorded password policy,
+  lockout and session hardening, and MFA enforcement settings compared
+  against the standard the organization states for itself (which ships as
+  enterprise data, with its comparison direction, not as constants in a
+  rule), plus MFA enrolment of every privileged account. A system
+  configured stricter than the standard passes; a stated standard that is
+  missing, or a requirement this code cannot interpret, refuses.
 - **Detection report card** — per-class recall (any-rule and designed-rule),
   record-level precision, clean-population false positives per 10k, pooled
   across seeds, Wilson intervals everywhere, three-outcome decisions; thin
@@ -56,27 +63,34 @@ python cli.py example                          # rebuild examples/run-001
 - **Workpapers** — per-rule workpapers, an engagement lead sheet separating
   exceptions from scope limitations, coverage against COBIT 2019 /
   ISO 27001:2022 / NIST CSF 2.0 (control ids + original one-line summaries,
-  verified 2026-07-27), CISA outline tags (Domain 5A for access, 4A/3B for
-  change), rendered as Markdown and self-contained HTML whose renderer
+  verified 2026-07-27; the three configuration controls added 2026-08-28
+  carry their own provenance note in DECISIONS.md D-019), CISA outline
+  tags (Domain 5A for access, 4A/3B for change, 4A+5A for the baseline
+  rules), rendered as Markdown and self-contained HTML whose renderer
   rejects conclusory and incident language.
 
 ## Measured, not asserted (examples/run-001)
 
 From the committed example run — regenerate it with `python cli.py example`:
 
-- 5,900-employee roster, 23,545 grants, 703 tickets, 52 planted conditions;
+- 5,900-employee roster, 23,545 grants, 703 tickets, 68 planted conditions;
   every one flagged in that single run, with the statistical claim carried
   by the card, not the anecdote.
 - Report card at 5 seeds × 7 per class (35 pooled per class, the smallest
-  pool whose perfect Wilson lower bound clears the 0.9 floor): all 13
+  pool whose perfect Wilson lower bound clears the 0.9 floor): all 17
   classes pass.
-- Precision 630/630 flagged records planted (95% Wilson 99.4%–100.0%,
-  n=630); clean-population flags 0 of 3,660 access records and 0 of 2,118
-  change records (upper bounds 10.5 and 18.1 per 10k respectively).
+- Precision 770/770 flagged records planted (95% Wilson 99.5%–100.0%,
+  n=770); clean-population flags 0 of 3,660 access records, 0 of 2,118
+  change records, and 0 of 2,944 baseline records (upper bounds 10.5,
+  18.1, and 13.0 per 10k respectively).
 - Precision 1.0 is earned, not free: the clean population deliberately
-  contains rehires, sanctioned cross-matrix exceptions, and
-  properly-reviewed weekend emergencies, and a test proves a naive
-  termination join false-positives on exactly the rehires.
+  contains rehires, sanctioned cross-matrix exceptions, properly-reviewed
+  weekend emergencies, systems configured stricter than the stated
+  standard, and ordinary accounts with no MFA enrolment. Three tests prove
+  the traps are live — a naive termination join false-positives on exactly
+  the rehires, an equality check against the standard on exactly the
+  stricter settings, and an enrol-everyone check on exactly the ordinary
+  accounts.
 
 ## Principles
 

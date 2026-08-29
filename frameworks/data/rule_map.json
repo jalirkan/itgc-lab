@@ -110,6 +110,38 @@
         {"id": "nist-csf-2.0:PR.PS-01", "rationale": "Applied practice keeps the recorded pipeline and reality reconciled; stale approvals measure the gap."}
       ],
       "cisa": [{"domain": 4, "section": "A", "topic": "IT Change, Configuration, and Patch Management"}]
+    },
+    "CFG-PWD": {
+      "controls": [
+        {"id": "iso-27001-2022:A.5.17", "rationale": "Compares each system's recorded password rules against the standard the organization states, evidencing how authentication information is governed in practice rather than on paper."},
+        {"id": "iso-27001-2022:A.8.9", "rationale": "A password setting that has drifted from the stated baseline is exactly the departure from an approved configuration this control asks to be detected."},
+        {"id": "nist-csf-2.0:PR.PS-01", "rationale": "Reconciles observed platform configuration to the approved state, setting by setting."}
+      ],
+      "cisa": [{"domain": 4, "section": "A", "topic": "IT Change, Configuration, and Patch Management"}, {"domain": 5, "section": "A", "topic": "Identity and Access Management"}]
+    },
+    "CFG-HARD": {
+      "controls": [
+        {"id": "iso-27001-2022:A.8.5", "rationale": "Lockout thresholds and idle timeouts are the sign-in protections this control governs; the baseline records what each system actually applies."},
+        {"id": "iso-27001-2022:A.8.9", "rationale": "Hardening values are configuration items: the evidence here is whether they still match the approved baseline."},
+        {"id": "nist-csf-2.0:PR.PS-01", "rationale": "Tests whether platforms remain in the known, approved state the stated standard defines."}
+      ],
+      "cisa": [{"domain": 4, "section": "A", "topic": "IT Change, Configuration, and Patch Management"}, {"domain": 5, "section": "A", "topic": "Identity and Access Management"}]
+    },
+    "CFG-MFA": {
+      "controls": [
+        {"id": "iso-27001-2022:A.8.5", "rationale": "Whether a system requires an additional authentication factor is the protection this control is about; the rule reads that switch per system."},
+        {"id": "iso-27001-2022:A.8.9", "rationale": "An MFA requirement recorded as switched off is a departure from the approved configuration baseline."},
+        {"id": "nist-csf-2.0:PR.PS-01", "rationale": "Evidence that the configuration carrying the stated standard is actually in place on each platform."}
+      ],
+      "cisa": [{"domain": 4, "section": "A", "topic": "IT Change, Configuration, and Patch Management"}, {"domain": 5, "section": "A", "topic": "Identity and Access Management"}]
+    },
+    "CFG-ENRL": {
+      "controls": [
+        {"id": "iso-27001-2022:A.8.2", "rationale": "Privileged rights carry the strongest authentication expectation; the register shows which privileged accounts actually carry a second factor."},
+        {"id": "iso-27001-2022:A.8.5", "rationale": "Examines the population the sign-in protection applies to, rather than the setting that requires it."},
+        {"id": "nist-csf-2.0:PR.AA-01", "rationale": "Credential management evidence: a privileged identity whose second factor was never issued is an unmanaged credential."}
+      ],
+      "cisa": [{"domain": 5, "section": "A", "topic": "Identity and Access Management"}]
     }
   }
 }

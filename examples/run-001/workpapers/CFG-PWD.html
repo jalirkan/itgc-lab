@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>Workpaper CFG-PWD — Password policy against the stated standard</title>
+<style>
+body { font-family: Georgia, 'Times New Roman', serif; margin: 2rem auto;
+       max-width: 60rem; color: rgb(25, 30, 35); line-height: 1.45; }
+h1 { font-size: 1.6rem; border-bottom: 2px solid rgb(25, 30, 35);
+     padding-bottom: 0.4rem; }
+h2 { font-size: 1.15rem; margin-top: 1.6rem; }
+p.subtitle { color: rgb(90, 96, 102); font-style: italic; }
+table { border-collapse: collapse; margin: 0.6rem 0; }
+th, td { border: 1px solid rgb(170, 175, 180); padding: 0.3rem 0.55rem;
+         text-align: left; vertical-align: top; font-size: 0.92rem; }
+th { background: rgb(238, 240, 242); }
+blockquote { border-left: 4px solid rgb(170, 175, 180); margin: 0.6rem 0;
+             padding: 0.2rem 0.8rem; color: rgb(90, 96, 102); }
+dl { margin: 0.4rem 0; }
+dt { font-weight: bold; }
+dd { margin: 0 0 0.35rem 1.2rem; }
+</style>
+</head><body>
+<h1>Workpaper CFG-PWD — Password policy against the stated standard</h1>
+<p class="subtitle">Outcome: exception</p>
+<h2>Identity</h2>
+<dl>
+<dt>Enterprise seed</dt><dd>run-001</dd>
+<dt>Snapshot</dt><dd>2026-06-30</dd>
+<dt>Window start</dt><dd>2024-12-30</dd>
+<dt>Generator version</dt><dd>0.1.0</dd>
+<dt>Workpaper generator</dt><dd>itgc-lab 0.1.0</dd>
+<dt>Rule</dt><dd>CFG-PWD</dd>
+<dt>Outcome</dt><dd>exception</dd>
+</dl>
+<h2>Objective and criterion</h2>
+<p>A recorded password-policy setting is a lead when its observed value does not satisfy the stated standard&#x27;s requirement for that setting — a minimum length or history depth, a maximum age — or when the standard states no requirement for it.</p>
+<h2>Population</h2>
+<p>All recorded password-policy settings across every system in the configuration baseline (complete examination).</p>
+<p>Records examined: 18 of 18.</p>
+<blockquote>Each procedure examines 100 percent of its declared population as of the snapshot. Counts are census facts about this population, not sample estimates, and are always stated with the population size.</blockquote>
+<h2>Policy thresholds applied</h2>
+<dl>
+<dt>password_history_depth</dt><dd>at least 12</dd>
+<dt>password_max_age_days</dt><dd>at most 90</dd>
+<dt>password_min_length</dt><dd>at least 12</dd>
+</dl>
+<h2>Results of examination</h2>
+<p>4 lead(s) raised from 18 records examined.</p>
+<table><thead><tr>
+<th>Subject</th>
+<th>Record id(s)</th>
+<th>Rationale</th>
+</tr></thead><tbody>
+<tr><td>erp</td><td>C-3de3faf093</td><td>Setting password_min_length on erp is recorded as 10; the stated standard requires at least 12.</td></tr>
+<tr><td>mail</td><td>C-889886b419</td><td>Setting password_max_age_days on mail is recorded as 365; the stated standard requires at most 90.</td></tr>
+<tr><td>mail</td><td>C-bfb7cfb026</td><td>Setting password_history_depth on mail is recorded as 3; the stated standard requires at least 12.</td></tr>
+<tr><td>erp</td><td>C-cde016e966</td><td>Setting password_max_age_days on erp is recorded as 180; the stated standard requires at most 90.</td></tr>
+</tbody></table>
+<h2>Limitations</h2>
+<ul>
+<li>The baseline records the value each system reports; whether the setting is actually applied to every account on that system is not visible in this export.</li>
+<li>A value stricter than the stated standard satisfies it here. Whether an unusually strict setting is workable in practice is a matter for the reviewer, not a lead.</li>
+<li>Only settings present in the baseline are examined; a system that reports no password policy at all would be a completeness gap in the export rather than a lead here.</li>
+</ul>
+<h2>Framework references</h2>
+<blockquote>References indicate that this procedure produces evidence RELEVANT to the control. They never assert the control is satisfied.</blockquote>
+<table><thead><tr>
+<th>Control</th>
+<th>Original summary</th>
+<th>Relevance</th>
+</tr></thead><tbody>
+<tr><td>iso-27001-2022:A.5.17</td><td>Authentication information is issued, held, and changed under rules strong enough that possessing it means what the access decision assumes.</td><td>Compares each system&#x27;s recorded password rules against the standard the organization states, evidencing how authentication information is governed in practice rather than on paper.</td></tr>
+<tr><td>iso-27001-2022:A.8.9</td><td>Security configuration of systems is defined, applied as a baseline, and monitored for drift away from the approved state.</td><td>A password setting that has drifted from the stated baseline is exactly the departure from an approved configuration this control asks to be detected.</td></tr>
+<tr><td>nist-csf-2.0:PR.PS-01</td><td>Configuration management practices are established and applied so platforms stay in known, approved states.</td><td>Reconciles observed platform configuration to the approved state, setting by setting.</td></tr>
+</tbody></table>
+<h2>Certification study tags</h2>
+<ul>
+<li>CISA D4-A: IT Change, Configuration, and Patch Management</li>
+<li>CISA D5-A: Identity and Access Management</li>
+</ul>
+</body></html>

@@ -30,7 +30,7 @@ dd { margin: 0 0 0.35rem 1.2rem; }
 <dt>Workpaper generator</dt><dd>itgc-lab 0.1.0</dd>
 </dl>
 <h2>Scope and method</h2>
-<p>Two engines ran: an access review over the IAM export reconciled to the HR roster, and a change-management review over tickets and the deploy log.</p>
+<p>Three engines ran: an access review over the IAM export reconciled to the HR roster, a change-management review over tickets and the deploy log, and a configuration-baseline review comparing each system&#x27;s recorded settings and MFA enrolments against the standard this organization states for itself.</p>
 <blockquote>Each procedure examines 100 percent of its declared population as of the snapshot. Counts are census facts about this population, not sample estimates, and are always stated with the population size.</blockquote>
 <h2>Procedure summary</h2>
 <table><thead><tr>
@@ -53,9 +53,13 @@ dd { margin: 0 0 0.35rem 1.2rem; }
 <tr><td>CHG-TICK</td><td>Deploy-log entries with no matching ticket</td><td>exception</td><td>4</td><td>699</td></tr>
 <tr><td>CHG-FRZ</td><td>Deployments inside change-freeze windows</td><td>exception</td><td>4</td><td>699</td></tr>
 <tr><td>CHG-STAL</td><td>Approved changes never deployed</td><td>exception</td><td>4</td><td>8</td></tr>
+<tr><td>CFG-PWD</td><td>Password policy against the stated standard</td><td>exception</td><td>4</td><td>18</td></tr>
+<tr><td>CFG-HARD</td><td>Lockout and session hardening against the stated standard</td><td>exception</td><td>4</td><td>12</td></tr>
+<tr><td>CFG-MFA</td><td>Multi-factor authentication enforcement settings</td><td>exception</td><td>4</td><td>12</td></tr>
+<tr><td>CFG-ENRL</td><td>MFA enrolment of privileged accounts</td><td>exception</td><td>4</td><td>17430</td></tr>
 </tbody></table>
 <h2>Exceptions raised for follow-up</h2>
-<p>12 procedure(s) raised 52 lead(s).</p>
+<p>16 procedure(s) raised 68 lead(s).</p>
 <table><thead><tr>
 <th>Rule</th>
 <th>Subject</th>
@@ -114,6 +118,22 @@ dd { margin: 0 0 0.35rem 1.2rem; }
 <tr><td>CHG-FRZ</td><td>DPL-1f861f5a59</td><td>CHG-b63615661c, DPL-1f861f5a59</td><td>Deployment to deploy on 2025-12-30 falls inside the freeze window 2025-12-29 to 2025-12-31 (Quarter-end change freeze).</td></tr>
 <tr><td>CHG-FRZ</td><td>DPL-7c773b8e54</td><td>CHG-85b190bd54, DPL-7c773b8e54</td><td>Deployment to hris on 2025-12-30 falls inside the freeze window 2025-12-29 to 2025-12-31 (Quarter-end change freeze).</td></tr>
 <tr><td>CHG-FRZ</td><td>DPL-940ae6b125</td><td>CHG-6c7bb19553, DPL-940ae6b125</td><td>Deployment to hris on 2025-03-30 falls inside the freeze window 2025-03-29 to 2025-03-31 (Quarter-end change freeze).</td></tr>
+<tr><td>CFG-PWD</td><td>erp</td><td>C-3de3faf093</td><td>Setting password_min_length on erp is recorded as 10; the stated standard requires at least 12.</td></tr>
+<tr><td>CFG-PWD</td><td>mail</td><td>C-889886b419</td><td>Setting password_max_age_days on mail is recorded as 365; the stated standard requires at most 90.</td></tr>
+<tr><td>CFG-PWD</td><td>mail</td><td>C-bfb7cfb026</td><td>Setting password_history_depth on mail is recorded as 3; the stated standard requires at least 12.</td></tr>
+<tr><td>CFG-PWD</td><td>erp</td><td>C-cde016e966</td><td>Setting password_max_age_days on erp is recorded as 180; the stated standard requires at most 90.</td></tr>
+<tr><td>CFG-HARD</td><td>dir</td><td>C-05ec679b93</td><td>Setting account_lockout_threshold on dir is recorded as 25; the stated standard requires at most 5.</td></tr>
+<tr><td>CFG-HARD</td><td>hris</td><td>C-08de21c138</td><td>Setting session_idle_timeout_minutes on hris is recorded as 60; the stated standard requires at most 15.</td></tr>
+<tr><td>CFG-HARD</td><td>deploy</td><td>C-284e54e9be</td><td>Setting account_lockout_threshold on deploy is recorded as 50; the stated standard requires at most 5.</td></tr>
+<tr><td>CFG-HARD</td><td>crm</td><td>C-af0ba699ef</td><td>Setting session_idle_timeout_minutes on crm is recorded as 480; the stated standard requires at most 15.</td></tr>
+<tr><td>CFG-MFA</td><td>dir</td><td>C-33a2265297</td><td>Setting mfa_required_for_privileged on dir is recorded as False; the stated standard requires set to True.</td></tr>
+<tr><td>CFG-MFA</td><td>deploy</td><td>C-76e0da8538</td><td>Setting mfa_required_for_privileged on deploy is recorded as False; the stated standard requires set to True.</td></tr>
+<tr><td>CFG-MFA</td><td>crm</td><td>C-984722dd21</td><td>Setting mfa_required_for_privileged on crm is recorded as False; the stated standard requires set to True.</td></tr>
+<tr><td>CFG-MFA</td><td>deploy</td><td>C-c55430cade</td><td>Setting mfa_required_for_remote_access on deploy is recorded as False; the stated standard requires set to True.</td></tr>
+<tr><td>CFG-ENRL</td><td>E-436c7523b2</td><td>M-a310832dda</td><td>Account E-436c7523b2 on dir holds privileged access and the enrolment register records no multi-factor enrolment for it; the stated standard requires MFA for privileged access.</td></tr>
+<tr><td>CFG-ENRL</td><td>E-e2f8337f62</td><td>M-b9ec0da224</td><td>Account E-e2f8337f62 on mail holds privileged access and the enrolment register records no multi-factor enrolment for it; the stated standard requires MFA for privileged access.</td></tr>
+<tr><td>CFG-ENRL</td><td>E-69c62b6ce1</td><td>M-ea8a511c05</td><td>Account E-69c62b6ce1 on deploy holds privileged access and the enrolment register records no multi-factor enrolment for it; the stated standard requires MFA for privileged access.</td></tr>
+<tr><td>CFG-ENRL</td><td>E-4c0437807e</td><td>M-f7b6a98a56</td><td>Account E-4c0437807e on deploy holds privileged access and the enrolment register records no multi-factor enrolment for it; the stated standard requires MFA for privileged access.</td></tr>
 </tbody></table>
 <h2>Review leads (recordkeeping)</h2>
 <p>Aged approved-but-undeployed tickets are listed apart from exceptions: they question recordkeeping, not directly a control&#x27;s operation.</p>
