@@ -1,6 +1,6 @@
 {
   "verified": {
-    "identifiers_checked": "2026-07-27; configuration-baseline controls added 2026-08-28",
+    "identifiers_checked": "2026-07-27; configuration-baseline controls added 2026-08-28 and their identifiers verified online the same day (A.5.17 Authentication information, A.8.5 Secure authentication, A.8.9 Configuration management - the last one new in the 2022 revision)",
     "method": "Control identifiers and titles checked against public framework indexes (ISO 27001:2022 Annex A control list; NIST CSF 2.0 subcategory references; COBIT 2019 objective/practice references). Every summary below is ORIGINAL to this project and deliberately one line.",
     "partiality": "These catalogs list only controls this lab can produce technical evidence for. A control's absence is not a statement about it."
   },
