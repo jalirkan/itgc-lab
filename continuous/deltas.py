@@ -16,6 +16,16 @@ Two building blocks:
   runs may carry leads that the month-end view resolves — that is
   fidelity, not noise.
 
+  What the reducer deliberately does NOT rebuild is the configuration
+  baseline. That export records what each system was observed to be set
+  to AT THE SNAPSHOT and carries no history of changes, so there is no
+  honest way to say what it read a month earlier; carrying the current
+  settings backwards would manufacture evidence that a baseline held on
+  a date nobody sampled it. The reduced export therefore has no
+  `configs` artifact at all, which makes the baseline rules refuse on it
+  (their "export is absent" path) rather than grade a borrowed one — an
+  absence that reports itself, per D-008.
+
 - `compare_snapshots(prior, current)` — census deltas between two
   exports: new/removed grants, new privileged access, newly dormant
   privileged access, terminations in the window, recert lapses and
@@ -147,6 +157,9 @@ def as_of(ent, day):
     reduced["deploys"] = {"schema_version": ent["deploys"]["schema_version"],
                           "kind": "deploys", "deploys": deploys}
 
+    # No `configs`: see the module docstring — a baseline observed only
+    # at the snapshot cannot be reduced to an earlier day, and refusing
+    # is the honest outcome.
     reduced["exceptions"] = {
         "schema_version": ent["exceptions"]["schema_version"],
         "kind": "exceptions",

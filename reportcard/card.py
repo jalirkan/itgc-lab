@@ -15,7 +15,8 @@ number on the card):
 - FALSE-POSITIVE RATES are measured on the CLEAN population, where every
   flagged record id is by construction a false positive (D-009), stated
   per 10,000 population records — grants for the access engine, tickets
-  plus deploy-log entries for the change engine.
+  plus deploy-log entries for the change engine, configuration settings
+  plus MFA-enrolment rows for the baseline engine.
 - Rates POOL across seeds; per-seed rows are reported alongside so a
   pooled number cannot hide an unstable rule. Recall decisions come from
   `decide()` against the interval: thin pools render INCONCLUSIVE rather
@@ -43,7 +44,17 @@ OUTCOME_PRECEDENCE = (EXCEPTION, INCONCLUSIVE, PASS)
 
 
 def _constituent_ids(refs):
+    """Every record id that constitutes one planted violation (D-012).
+
+    Ground truth describes the violation, not the edit: an SoD entry
+    carries the pre-existing half of the toxic pair alongside the added
+    grant, and a class whose plant is a mutation carries the id of the
+    row it mutated. This is the single definition — the card and the
+    committed example's README both call it, so the two cannot drift.
+    """
     ids = set(refs.get("grant_ids", []))
+    ids |= set(refs.get("config_ids", []))
+    ids |= set(refs.get("enrolment_ids", []))
     for key in ("ticket_id", "deploy_id"):
         if refs.get(key):
             ids.add(refs[key])
@@ -73,13 +84,16 @@ def _designed_rules(all_rules):
 def build_report_card(base_seed="itgc-rc", n_seeds=DEFAULT_N_SEEDS,
                       plan=None, recall_floor=DEFAULT_RECALL_FLOOR,
                       access_rules=None, change_rules=None,
-                      config_kwargs=None):
+                      baseline_rules=None, config_kwargs=None):
     """Grade the engines across `n_seeds` independently generated
-    enterprises. `access_rules`/`change_rules` accept rule subsets so a
-    deliberately broken battery can be graded (the regression test).
+    enterprises. `access_rules`/`change_rules`/`baseline_rules` accept
+    rule subsets so a deliberately broken battery can be graded (the
+    regression test).
     """
     from access.engine import AccessView
     from access.rules import ACCESS_RULES
+    from baseline.engine import BaselineView
+    from baseline.rules import BASELINE_RULES
     from change.engine import ChangeView
     from change.rules import CHANGE_RULES
     from core.rules import run_rules
@@ -87,15 +101,18 @@ def build_report_card(base_seed="itgc-rc", n_seeds=DEFAULT_N_SEEDS,
     plan = dict(DEFAULT_PLAN if plan is None else plan)
     access_rules = ACCESS_RULES if access_rules is None else access_rules
     change_rules = CHANGE_RULES if change_rules is None else change_rules
+    baseline_rules = (BASELINE_RULES if baseline_rules is None
+                      else baseline_rules)
     config_kwargs = config_kwargs or {}
-    designed = _designed_rules(tuple(access_rules) + tuple(change_rules))
+    designed = _designed_rules(tuple(access_rules) + tuple(change_rules)
+                               + tuple(baseline_rules))
 
     per_class = {cls: {"planted": 0, "caught_any": 0, "caught_designed": 0,
                        "per_seed": []}
                  for cls in plan}
     tp = fp_planted = 0
-    clean_fp_access = clean_fp_change = 0
-    clean_pop_access = clean_pop_change = 0
+    clean_fp_access = clean_fp_change = clean_fp_baseline = 0
+    clean_pop_access = clean_pop_change = clean_pop_baseline = 0
     seeds = []
 
     for i in range(n_seeds):
@@ -105,7 +122,8 @@ def build_report_card(base_seed="itgc-rc", n_seeds=DEFAULT_N_SEEDS,
         planted, manifest = inject(clean, plan, seed)
 
         results = (run_rules(access_rules, AccessView(planted))
-                   + run_rules(change_rules, ChangeView(planted)))
+                   + run_rules(change_rules, ChangeView(planted))
+                   + run_rules(baseline_rules, BaselineView(planted)))
         per_rule, flagged = _flagged_by(results)
 
         planted_ids = set()
@@ -137,13 +155,18 @@ def build_report_card(base_seed="itgc-rc", n_seeds=DEFAULT_N_SEEDS,
 
         clean_results_a = run_rules(access_rules, AccessView(clean))
         clean_results_c = run_rules(change_rules, ChangeView(clean))
+        clean_results_b = run_rules(baseline_rules, BaselineView(clean))
         _, clean_flagged_a = _flagged_by(clean_results_a)
         _, clean_flagged_c = _flagged_by(clean_results_c)
+        _, clean_flagged_b = _flagged_by(clean_results_b)
         clean_fp_access += len(clean_flagged_a)
         clean_fp_change += len(clean_flagged_c)
+        clean_fp_baseline += len(clean_flagged_b)
         clean_pop_access += len(clean["iam"]["grants"])
         clean_pop_change += (len(clean["tickets"]["tickets"])
                              + len(clean["deploys"]["deploys"]))
+        clean_pop_baseline += (len(clean["configs"]["settings"])
+                               + len(clean["configs"]["mfa_enrolments"]))
 
     classes = []
     for cls in sorted(plan):
@@ -178,6 +201,9 @@ def build_report_card(base_seed="itgc-rc", n_seeds=DEFAULT_N_SEEDS,
     fp_change = Measurement.proportion(
         "clean-population false positives (change, per record)",
         clean_fp_change, clean_pop_change, direction=LOWER_IS_BETTER)
+    fp_baseline = Measurement.proportion(
+        "clean-population false positives (baseline, per record)",
+        clean_fp_baseline, clean_pop_baseline, direction=LOWER_IS_BETTER)
 
     outcomes = [c["decision"]["outcome"] for c in classes]
     overall = next((o for o in OUTCOME_PRECEDENCE if o in outcomes), PASS)
@@ -193,6 +219,7 @@ def build_report_card(base_seed="itgc-rc", n_seeds=DEFAULT_N_SEEDS,
             "n_seeds": n_seeds,
             "access_rules": [r.rule_id for r in access_rules],
             "change_rules": [r.rule_id for r in change_rules],
+            "baseline_rules": [r.rule_id for r in baseline_rules],
             "config": dict(config_kwargs),
         },
         "classes": classes,
@@ -202,6 +229,8 @@ def build_report_card(base_seed="itgc-rc", n_seeds=DEFAULT_N_SEEDS,
                            per_10k=_per_10k(fp_access)),
             "change": dict(fp_change.to_dict(),
                            per_10k=_per_10k(fp_change)),
+            "baseline": dict(fp_baseline.to_dict(),
+                             per_10k=_per_10k(fp_baseline)),
         },
         "outcome_counts": {o: outcomes.count(o)
                            for o in (PASS, EXCEPTION, INCONCLUSIVE)},

@@ -22,6 +22,18 @@ class Definitions(unittest.TestCase):
         self.assertEqual(
             _constituent_ids({"ticket_id": "CHG-1", "deploy_id": "DPL-1"}),
             {"CHG-1", "DPL-1"})
+        # Configuration classes constitute themselves out of the rows
+        # they moved; the system and setting travel as provenance, and a
+        # system name is emphatically NOT a record id — grading a whole
+        # system as planted would make every row on it a free catch.
+        self.assertEqual(
+            _constituent_ids({"config_ids": ["C-1"], "system": "erp",
+                              "setting": "password_min_length"}),
+            {"C-1"})
+        self.assertEqual(
+            _constituent_ids({"enrolment_ids": ["M-1"], "system": "erp",
+                              "account_id": "A-1", "user_id": "E-9"}),
+            {"M-1"})
         self.assertEqual(_constituent_ids({"user_id": "E-9"}), set())
 
     def test_hand_computed_single_seed_card(self):
@@ -75,7 +87,7 @@ class TwoSeedCard(unittest.TestCase):
         p = self.card["precision"]
         self.assertEqual(p["numerator"], p["n"])
         self.assertGreater(p["n"], 0)
-        for engine in ("access", "change"):
+        for engine in ("access", "change", "baseline"):
             fp = self.card["clean_false_positives"][engine]
             self.assertEqual(fp["numerator"], 0)
             self.assertGreater(fp["n"], 0)
@@ -97,6 +109,7 @@ class TwoSeedCard(unittest.TestCase):
                                          for k in sorted(DEFAULT_PLAN)})
         self.assertIn("ACC-TERM", ident["access_rules"])
         self.assertIn("CHG-FRZ", ident["change_rules"])
+        self.assertIn("CFG-ENRL", ident["baseline_rules"])
 
 
 class BrokenRuleRegression(unittest.TestCase):
@@ -139,13 +152,16 @@ class BrokenRuleRegressionEveryClass(unittest.TestCase):
     @classmethod
     def _card_without(cls, rule_id):
         from access.rules import ACCESS_RULES
+        from baseline.rules import BASELINE_RULES
         from change.rules import CHANGE_RULES
         return build_report_card(
             base_seed="itgc-break", n_seeds=1, plan=cls.PLAN,
             access_rules=tuple(r for r in ACCESS_RULES
                                if r.rule_id != rule_id),
             change_rules=tuple(r for r in CHANGE_RULES
-                               if r.rule_id != rule_id))
+                               if r.rule_id != rule_id),
+            baseline_rules=tuple(r for r in BASELINE_RULES
+                                 if r.rule_id != rule_id))
 
     def _assert_break_flips_only(self, target, rule_id):
         card = self._card_without(rule_id)
@@ -168,14 +184,19 @@ class BrokenRuleRegressionEveryClass(unittest.TestCase):
         self.assertEqual(card["overall_outcome"], EXCEPTION)
         # The identity echo shows the battery the card actually graded.
         self.assertNotIn(rule_id, card["identity"]["access_rules"]
-                         + card["identity"]["change_rules"])
+                         + card["identity"]["change_rules"]
+                         + card["identity"]["baseline_rules"])
 
     def test_designed_rule_map_is_one_to_one(self):
         # The premise of breaking THE rule for a class: every planted
         # class names exactly one designed rule, and none is unclaimed.
+        # This is what makes the enumeration below exhaustive — a class
+        # added without a designed rule fails here, not silently.
         from access.rules import ACCESS_RULES
+        from baseline.rules import BASELINE_RULES
         from change.rules import CHANGE_RULES
-        designed = _designed_rules(ACCESS_RULES + CHANGE_RULES)
+        designed = _designed_rules(ACCESS_RULES + CHANGE_RULES
+                                   + BASELINE_RULES)
         self.assertEqual(set(designed), set(CLASSES))
         for cls_name, rule_ids in designed.items():
             self.assertEqual(len(rule_ids), 1, cls_name)
@@ -218,6 +239,32 @@ class BrokenRuleRegressionEveryClass(unittest.TestCase):
 
     def test_stale_ticket_flips_when_chg_stal_is_removed(self):
         self._assert_break_flips_only("change.stale_ticket", "CHG-STAL")
+
+    def test_password_drift_flips_when_cfg_pwd_is_removed(self):
+        self._assert_break_flips_only("config.password_policy_drift",
+                                      "CFG-PWD")
+
+    def test_hardening_drift_flips_when_cfg_hard_is_removed(self):
+        self._assert_break_flips_only("config.hardening_drift", "CFG-HARD")
+
+    def test_mfa_enforcement_flips_when_cfg_mfa_is_removed(self):
+        self._assert_break_flips_only("config.mfa_not_enforced", "CFG-MFA")
+
+    def test_mfa_enrolment_flips_when_cfg_enrl_is_removed(self):
+        self._assert_break_flips_only("config.mfa_enrolment_gap", "CFG-ENRL")
+
+    def test_every_class_has_a_break_test(self):
+        """The enumeration above is written out one method per class, so
+        this guards the thing an added class can silently miss: a new
+        planted class with no regression method of its own. The suite
+        that grades the classes is generated from CLASSES, but the
+        methods that BREAK them are not, and a hole there is invisible
+        until a rule regresses unnoticed."""
+        import inspect
+        source = inspect.getsource(type(self))
+        missing = [c for c in CLASSES if '"{0}"'.format(c) not in source]
+        self.assertEqual(missing, [],
+                         "planted classes with no break-one-rule test")
 
     def test_sod_regression_rides_designed_recall_not_any_rule(self):
         # The one class where the flip cannot be total: an added SoD role

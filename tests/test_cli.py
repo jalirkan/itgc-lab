@@ -30,14 +30,15 @@ class CliRoundTrip(unittest.TestCase):
 
     def test_generate_wrote_enterprise_and_manifest(self):
         for name in ("roster", "iam", "tickets", "deploys", "exceptions",
-                     "policy", "manifest"):
+                     "configs", "policy", "manifest"):
             self.assertTrue(
                 os.path.exists(os.path.join(self.ent_dir, name + ".json")),
                 name)
         with open(os.path.join(self.ent_dir, "manifest.json"),
                   encoding="ascii") as fh:
             manifest = json.load(fh)
-        self.assertEqual(len(manifest["violations"]), 13)
+        from enterprise.violations import CLASSES
+        self.assertEqual(len(manifest["violations"]), len(CLASSES))
 
     def test_generate_is_deterministic_at_the_file_level(self):
         other = os.path.join(self.tmp.name, "ent2")
@@ -59,12 +60,13 @@ class CliRoundTrip(unittest.TestCase):
             findings = json.load(fh)
         self.assertEqual(len(findings["access"]), 7)
         self.assertEqual(len(findings["change"]), 6)
+        self.assertEqual(len(findings["baseline"]), 4)
         for base in ("leadsheet", "coverage"):
             for ext in (".md", ".html"):
                 self.assertTrue(os.path.exists(
                     os.path.join(self.review_dir, base + ext)))
         wp = os.listdir(os.path.join(self.review_dir, "workpapers"))
-        self.assertEqual(len(wp), 26)  # 13 rules x 2 formats
+        self.assertEqual(len(wp), 34)  # 17 rules x 2 formats
 
     def test_reportcard_command(self):
         out = os.path.join(self.tmp.name, "card")

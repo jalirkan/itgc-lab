@@ -3,7 +3,7 @@
 Commands:
   generate    build a synthetic enterprise (optionally with planted
               violations; the manifest is the only ground truth)
-  review      run both rule engines over an enterprise directory and
+  review      run every rule engine over an enterprise directory and
               write findings, workpapers, lead sheet, and coverage
   reportcard  grade the engines against planted truth across seeds
   continuous  compare a derived prior snapshot with the current one
@@ -19,6 +19,7 @@ import os
 import sys
 
 from access.engine import run_access_review
+from baseline.engine import run_baseline_review
 from change.engine import run_change_review
 from continuous.deltas import age_leads, as_of, compare_snapshots
 from core.canonical import canonical_dumps, write_canonical
@@ -29,7 +30,7 @@ from frameworks.catalog import coverage, validate_catalogs, validate_map
 from report.document import write_document
 from report.workpapers import (card_doc, continuous_doc, coverage_doc,
                                lead_sheet, rule_workpaper)
-from reportcard.card import build_report_card
+from reportcard.card import _constituent_ids, build_report_card
 
 # --- committed example: parameters are code, so the committed artifacts
 # --- and their regeneration cannot drift apart (per lab D-026).
@@ -80,7 +81,9 @@ def _run_review(ent, outdir):
     validate_catalogs()
     access = run_access_review(ent)
     change = run_change_review(ent)
-    validate_map(known_rule_ids=[r.rule_id for r in access + change])
+    config = run_baseline_review(ent)
+    every = access + change + config
+    validate_map(known_rule_ids=[r.rule_id for r in every])
     os.makedirs(outdir, exist_ok=True)
     findings = {
         "identity": {"seed": ent["policy"]["seed"],
@@ -88,25 +91,26 @@ def _run_review(ent, outdir):
                      "generator_version": ent["policy"]["generator_version"]},
         "access": [r.to_dict() for r in access],
         "change": [r.to_dict() for r in change],
+        "baseline": [r.to_dict() for r in config],
     }
     _write_json(os.path.join(outdir, "findings.json"), findings)
     wp_dir = os.path.join(outdir, "workpapers")
     os.makedirs(wp_dir, exist_ok=True)
-    for res in access + change:
+    for res in every:
         write_document(rule_workpaper(res, ent),
                        os.path.join(wp_dir, res.rule_id))
-    write_document(lead_sheet(access, change, ent),
+    write_document(lead_sheet(access, change, config, ent),
                    os.path.join(outdir, "leadsheet"))
-    write_document(coverage_doc(coverage(access + change)),
+    write_document(coverage_doc(coverage(every)),
                    os.path.join(outdir, "coverage"))
-    n_leads = sum(len(r.findings) for r in access + change)
-    outcomes = [r.outcome for r in access + change]
+    n_leads = sum(len(r.findings) for r in every)
+    outcomes = [r.outcome for r in every]
     print("review: {0} rules, {1} leads, outcomes: {2} pass / {3} "
           "exception / {4} inconclusive -> {5}".format(
               len(outcomes), n_leads, outcomes.count("pass"),
               outcomes.count("exception"), outcomes.count("inconclusive"),
               outdir))
-    return access, change
+    return access, change, config
 
 
 def cmd_review(args):
@@ -225,23 +229,17 @@ def _example_readme(root):
               encoding="ascii") as fh:
         cont = json.load(fh)
 
-    n_leads = sum(len(r["findings"])
-                  for r in findings["access"] + findings["change"])
+    every = (findings["access"] + findings["change"]
+             + findings["baseline"])
+    n_leads = sum(len(r["findings"]) for r in every)
     flagged = set()
-    for r in findings["access"] + findings["change"]:
+    for r in every:
         for f in r["findings"]:
             flagged.update(f["record_ids"])
-    planted_ids = set()
-    for v in manifest["violations"]:
-        planted_ids.update(v["refs"].get("grant_ids", []))
-        for key in ("ticket_id", "deploy_id"):
-            if v["refs"].get(key):
-                planted_ids.add(v["refs"][key])
-    caught = sum(
-        1 for v in manifest["violations"]
-        if (set(v["refs"].get("grant_ids", []))
-            | {v["refs"][k] for k in ("ticket_id", "deploy_id")
-               if v["refs"].get(k)}) & flagged)
+    # One definition of "the records that constitute a plant", shared with
+    # the card, so this README cannot count them differently (D-012).
+    caught = sum(1 for v in manifest["violations"]
+                 if _constituent_ids(v["refs"]) & flagged)
 
     lines = [
         "# examples/run-001",
@@ -266,9 +264,9 @@ def _example_readme(root):
         "- {0} planted conditions across {1} classes; the manifest is the "
         "only ground truth.".format(len(manifest["violations"]),
                                     len(manifest["plan"])),
-        "- Both engines raised {0} leads; {1} of {2} planted conditions "
-        "were flagged in this single run (the statistical claim lives in "
-        "the report card, not in one run).".format(
+        "- The three engines raised {0} leads; {1} of {2} planted "
+        "conditions were flagged in this single run (the statistical "
+        "claim lives in the report card, not in one run).".format(
             n_leads, caught, len(manifest["violations"])),
         "",
         "## Report card (5 seeds x 7 per class, floor 0.9)",
@@ -283,6 +281,8 @@ def _example_readme(root):
             card["clean_false_positives"]["access"]["per_10k"]["rendered"]),
         "- Clean-population flags, change: {0}".format(
             card["clean_false_positives"]["change"]["per_10k"]["rendered"]),
+        "- Clean-population flags, baseline: {0}".format(
+            card["clean_false_positives"]["baseline"]["per_10k"]["rendered"]),
         "",
         "The card grades the RULES on standard-size populations across "
         "independent seeds; this directory's large enterprise "
@@ -301,7 +301,7 @@ def _example_readme(root):
         "## Files",
         "",
         "- `manifest.json` - planted ground truth (committed)",
-        "- `findings.json` - both engines' results (committed)",
+        "- `findings.json` - every engine's results (committed)",
         "- `workpapers/`, `leadsheet.*`, `coverage.*` - the workpaper "
         "pack (committed)",
         "- `card.json`, `card.*` - detection report card (committed)",
@@ -350,7 +350,7 @@ def build_parser():
     g.add_argument("--plant-seed", help="defaults to --seed")
     g.set_defaults(fn=cmd_generate)
 
-    r = sub.add_parser("review", help="run both engines over an export")
+    r = sub.add_parser("review", help="run every engine over an export")
     r.add_argument("--dir", required=True)
     r.add_argument("--out", required=True)
     r.set_defaults(fn=cmd_review)

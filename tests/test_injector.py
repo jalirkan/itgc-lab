@@ -3,6 +3,8 @@ import unittest
 
 from core.canonical import canonical_bytes
 from enterprise import catalogs, dates, generator, roster
+from enterprise.baseline import (HARDENING_SETTINGS, MFA_SETTINGS,
+                                 PASSWORD_SETTINGS, meets)
 from enterprise.tickets import in_freeze
 from enterprise.violations import CLASSES, InjectionError, inject
 from tests.helpers import default_config, default_enterprise
@@ -35,6 +37,10 @@ class _World:
                          for x in ent["exceptions"]["exceptions"]}
         self.freezes = ent["policy"]["freeze_windows"]
         self.sod = catalogs.sod_matrix()["pairs"]
+        self.standard = ent["policy"]["config_standard"]
+        self.settings = _by(ent["configs"]["settings"], "config_id")
+        self.enrolments = _by(ent["configs"]["mfa_enrolments"],
+                              "enrolment_id")
 
     def held(self, eid):
         return {"{0}:{1}".format(g["system"], g["role"])
@@ -124,6 +130,22 @@ class _World:
                 and dates.days_between(t["approved_at"], self.snapshot)
                 > self.t["stale_ticket_days"])
 
+    def _off_standard(self, row, names):
+        return (row["setting"] in names
+                and not meets(self.standard[row["setting"]], row["value"]))
+
+    def password_policy_drift(self, row):
+        return self._off_standard(row, PASSWORD_SETTINGS)
+
+    def hardening_drift(self, row):
+        return self._off_standard(row, HARDENING_SETTINGS)
+
+    def mfa_not_enforced(self, row):
+        return self._off_standard(row, MFA_SETTINGS)
+
+    def mfa_enrolment_gap(self, e):
+        return e["privileged"] and not e["enrolled"]
+
 
 class CleanBaseRates(unittest.TestCase):
     def test_every_violation_property_is_absent_in_clean_data(self):
@@ -155,6 +177,16 @@ class CleanBaseRates(unittest.TestCase):
                           if w.freeze_deploy(d)], [])
         self.assertEqual([t["ticket_id"] for t in tickets
                           if w.stale_ticket(t)], [])
+        settings = w.settings.values()
+        self.assertEqual([s["config_id"] for s in settings
+                          if w.password_policy_drift(s)], [])
+        self.assertEqual([s["config_id"] for s in settings
+                          if w.hardening_drift(s)], [])
+        self.assertEqual([s["config_id"] for s in settings
+                          if w.mfa_not_enforced(s)], [])
+        self.assertEqual([e["enrolment_id"]
+                          for e in w.enrolments.values()
+                          if w.mfa_enrolment_gap(e)], [])
 
 
 class InjectorContract(unittest.TestCase):
@@ -232,8 +264,49 @@ class InjectorContract(unittest.TestCase):
             elif cls_name == "change.stale_ticket":
                 self.assertTrue(w.stale_ticket(
                     w.tickets[refs["ticket_id"]]), v)
+            elif cls_name == "config.password_policy_drift":
+                self.assertTrue(w.password_policy_drift(
+                    w.settings[refs["config_ids"][0]]), v)
+            elif cls_name == "config.hardening_drift":
+                self.assertTrue(w.hardening_drift(
+                    w.settings[refs["config_ids"][0]]), v)
+            elif cls_name == "config.mfa_not_enforced":
+                self.assertTrue(w.mfa_not_enforced(
+                    w.settings[refs["config_ids"][0]]), v)
+            elif cls_name == "config.mfa_enrolment_gap":
+                self.assertTrue(w.mfa_enrolment_gap(
+                    w.enrolments[refs["enrolment_ids"][0]]), v)
             else:
                 self.fail("untested class " + cls_name)
+
+    def test_config_plants_are_mutations_that_keep_their_ids(self):
+        """The configuration classes plant by moving a recorded value, so
+        the row's natural-key id survives untouched: the planted and the
+        clean export hold exactly the same config and enrolment ids, in
+        the same canonical order (D-007). Nothing about position or id
+        distinguishes a drifted setting from a compliant one."""
+        for key, id_field in (("settings", "config_id"),
+                              ("mfa_enrolments", "enrolment_id")):
+            before = [r[id_field] for r in self.clean["configs"][key]]
+            after = [r[id_field] for r in self.planted["configs"][key]]
+            self.assertEqual(before, after, key)
+            self.assertEqual(after, sorted(after), key)
+        id_re = re.compile(r"^C-[0-9a-f]{10}$")
+        for row in self.planted["configs"]["settings"]:
+            self.assertTrue(id_re.match(row["config_id"]), row["config_id"])
+        # And the rows the manifest names really are the only ones that
+        # moved: everything else is byte-identical to the clean export.
+        planted_ids = set()
+        for v in self.manifest["violations"]:
+            planted_ids.update(v["refs"].get("config_ids", []))
+            planted_ids.update(v["refs"].get("enrolment_ids", []))
+        for key, id_field in (("settings", "config_id"),
+                              ("mfa_enrolments", "enrolment_id")):
+            clean_by_id = {r[id_field]: r for r in self.clean["configs"][key]}
+            changed = [r[id_field] for r in self.planted["configs"][key]
+                       if r != clean_by_id[r[id_field]]]
+            self.assertEqual(sorted(changed),
+                             sorted(set(changed) & planted_ids), key)
 
     def test_no_positional_artifacts(self):
         gid_re = re.compile(r"^G-[0-9a-f]{10}$")

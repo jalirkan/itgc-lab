@@ -4,6 +4,7 @@ import unittest
 from access.engine import run_access_review
 from continuous.deltas import age_leads, as_of, compare_snapshots
 from core.canonical import canonical_bytes
+from core.stats import INCONCLUSIVE
 from enterprise import dates
 from enterprise.violations import inject
 from tests.helpers import default_enterprise
@@ -223,6 +224,27 @@ class LeadAging(unittest.TestCase):
                          {"open": 1, "new": 0, "persisting": 1,
                           "resolved": 1})
         self.assertEqual(aging["resolved_leads"][0]["record_ids"], ["G-b"])
+
+
+class ConfigBaselineIsNotTimeTravelled(unittest.TestCase):
+    """The configuration baseline carries no history, so an as-of view
+    has none either — and the baseline rules must say so rather than
+    grade the current settings as if they had been sampled a month ago
+    (D-008/D-019)."""
+
+    def test_reduced_export_has_no_configs_artifact(self):
+        ent = default_enterprise()
+        prior = as_of(ent, dates.add_days(ent["policy"]["snapshot"], -60))
+        self.assertNotIn("configs", prior)
+        self.assertIn("configs", ent)
+
+    def test_baseline_rules_refuse_on_a_reduced_export(self):
+        from baseline.engine import run_baseline_review
+        ent = default_enterprise()
+        prior = as_of(ent, dates.add_days(ent["policy"]["snapshot"], -60))
+        for res in run_baseline_review(prior):
+            self.assertEqual(res.outcome, INCONCLUSIVE, res.rule_id)
+            self.assertIn("baseline export is absent", res.refusal_reason)
 
 
 if __name__ == "__main__":

@@ -13,6 +13,8 @@ The planted-class identifiers (e.g. "change.freeze_violation") are ground
 identifiers may appear verbatim in report-card tables. They are stripped
 before scanning (an exact-string allowlist, the same shape as lab
 D-024's allowance for standard titles), and the ban applies to prose.
+The allowlist is derived from CLASSES, so a planted class added later is
+covered without anyone remembering to widen a literal list.
 
 The bare-rate rule (toolkit D-030): any rendered line containing a
 percent sign must also carry its n (as "n=" or a k/n fraction). Census

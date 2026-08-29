@@ -100,6 +100,7 @@ class WorkpaperPack(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         from access.engine import run_access_review
+        from baseline.engine import run_baseline_review
         from change.engine import run_change_review
         from enterprise.violations import CLASSES, inject
         from tests.helpers import default_enterprise
@@ -108,10 +109,11 @@ class WorkpaperPack(unittest.TestCase):
             cls.ent, {c: 2 for c in CLASSES}, "wp-001")
         cls.access = run_access_review(cls.planted)
         cls.change = run_change_review(cls.planted)
+        cls.config = run_baseline_review(cls.planted)
 
     def test_every_rule_workpaper_renders_clean(self):
         from report.workpapers import rule_workpaper
-        for res in self.access + self.change:
+        for res in self.access + self.change + self.config:
             d = rule_workpaper(res, self.planted)
             md = render_markdown(d)
             html = render_html(d)
@@ -124,22 +126,32 @@ class WorkpaperPack(unittest.TestCase):
     def test_lead_sheet_separates_sections(self):
         from report.workpapers import lead_sheet
         md = render_markdown(lead_sheet(self.access, self.change,
-                                        self.planted))
+                                        self.config, self.planted))
         self.assertIn("## Exceptions raised for follow-up", md)
+        # The baseline engine's leads reach the pack, not just the card.
+        self.assertIn("CFG-PWD", md)
+        self.assertIn("CFG-ENRL", md)
         self.assertIn("## Review leads (recordkeeping)", md)
         self.assertNotIn("## Procedures unable to conclude", md)
 
     def test_lead_sheet_lists_scope_limitations_separately(self):
         from access.engine import run_access_review
+        from baseline.engine import run_baseline_review
         from change.engine import run_change_review
         from report.workpapers import lead_sheet
         crippled = copy.deepcopy(self.ent)
         crippled["policy"]["thresholds"] = {}
+        del crippled["policy"]["config_standard"]
         md = render_markdown(lead_sheet(run_access_review(crippled),
                                         run_change_review(crippled),
+                                        run_baseline_review(crippled),
                                         crippled))
         self.assertIn("## Procedures unable to conclude", md)
         self.assertIn("refusing rather than assuming", md)
+        # A baseline with no stated standard is a scope limitation, not a
+        # clean run: every CFG rule appears in that section.
+        for rule_id in ("CFG-PWD", "CFG-HARD", "CFG-MFA", "CFG-ENRL"):
+            self.assertIn(rule_id, md)
 
     def test_card_and_coverage_docs_render(self):
         from frameworks.catalog import coverage
@@ -151,11 +163,13 @@ class WorkpaperPack(unittest.TestCase):
         md = render_markdown(card_doc(card))
         self.assertIn("Wilson", md)
         self.assertIn("no composite score", md.lower())
-        cov_md = render_markdown(coverage_doc(coverage(self.access
-                                                       + self.change)))
+        self.assertIn("Baseline rules", md)
+        self.assertIn("baseline engine", md)
+        every = self.access + self.change + self.config
+        cov_md = render_markdown(coverage_doc(coverage(every)))
         self.assertIn("tested-with-exceptions", cov_md)
         render_html(card_doc(card))
-        render_html(coverage_doc(coverage(self.access + self.change)))
+        render_html(coverage_doc(coverage(every)))
 
     def test_write_document_emits_both_files(self):
         from report.workpapers import rule_workpaper

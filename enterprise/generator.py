@@ -1,22 +1,24 @@
 """Enterprise orchestrator: one seed in, one coherent org out.
 
 Every component draws from its own string-seeded stream (DECISIONS.md
-D-006/D-007): "roster", "iam", "tickets" — and the injector, elsewhere,
-"violations". Artifacts are plain JSON-shaped dicts written through
-core.canonical, so "same seed, same enterprise" is byte identity, not a
-summary claim (per lab D-007 / toolkit D-009). No wall clock anywhere:
+D-006/D-007): "roster", "iam", "tickets", "configs" — and the injector,
+elsewhere, "violations". Artifacts are plain JSON-shaped dicts written
+through core.canonical, so "same seed, same enterprise" is byte identity,
+not a summary claim (per lab D-007 / toolkit D-009). No wall clock anywhere:
 the world is a pure function of (config, data files, code version).
 """
 
 import os
 
-from . import catalogs, iam, roster, tickets
-from .config import GENERATOR_VERSION, THRESHOLDS, GenConfig
+from . import baseline, catalogs, iam, roster, tickets
+from .config import (CONFIG_STANDARD, GENERATOR_VERSION, THRESHOLDS,
+                     GenConfig)
 from . import dates
 from core import rng as rngmod
 from core.canonical import SCHEMA_VERSION, read_canonical, write_canonical
 
-ARTIFACTS = ("roster", "iam", "tickets", "deploys", "exceptions", "policy")
+ARTIFACTS = ("roster", "iam", "tickets", "deploys", "exceptions",
+             "configs", "policy")
 
 
 def generate(cfg: GenConfig):
@@ -30,6 +32,9 @@ def generate(cfg: GenConfig):
         rngmod.stream(cfg.seed, "iam"), cfg, THRESHOLDS, employees, matrix)
     ticket_rows, deploy_rows, freezes = tickets.build_tickets(
         rngmod.stream(cfg.seed, "tickets"), cfg, THRESHOLDS, employees)
+    settings, enrolments = baseline.build_configs(
+        rngmod.stream(cfg.seed, "configs"), cfg, CONFIG_STANDARD,
+        org_data["systems"], grants)
 
     window_start = dates.months_back(cfg.snapshot, cfg.months)
     return {
@@ -59,6 +64,12 @@ def generate(cfg: GenConfig):
             "kind": "exceptions",
             "exceptions": exceptions,
         },
+        "configs": {
+            "schema_version": SCHEMA_VERSION,
+            "kind": "configs",
+            "settings": settings,
+            "mfa_enrolments": enrolments,
+        },
         "policy": {
             "schema_version": SCHEMA_VERSION,
             "kind": "policy",
@@ -68,6 +79,8 @@ def generate(cfg: GenConfig):
             "window_start": window_start,
             "config": cfg.to_dict(),
             "thresholds": dict(THRESHOLDS),
+            "config_standard": {name: dict(spec)
+                                for name, spec in CONFIG_STANDARD.items()},
             "freeze_windows": freezes,
         },
     }
