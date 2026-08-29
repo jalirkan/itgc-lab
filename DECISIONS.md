@@ -294,12 +294,20 @@ Framework identifiers, with the provenance stated honestly: three ISO/IEC
 27001:2022 Annex A controls were added — A.5.17 (Authentication
 information), A.8.5 (Secure authentication), A.8.9 (Configuration
 management). They come from the same published Annex A control list
-D-016 worked from, but unlike that batch they were NOT re-checked against
-an online index, because this lab is offline by design and the check
-could not be run here. `identifiers_checked` on controls.json records the
-second date separately rather than letting the new ids inherit the old
-verification. Nothing else was added: COBIT and NIST mappings reuse ids
-already verified in D-016.
+D-016 worked from. They were added unverified — this lab is offline by
+design, so the check could not be run from inside it — and
+`identifiers_checked` on controls.json recorded the second date
+separately rather than letting the new ids inherit the old verification.
+
+**Verified 2026-08-28, from outside the lab.** All three titles confirmed
+against two independent public Annex A indexes: A.5.17 Authentication
+information, A.8.5 Secure authentication, A.8.9 Configuration management
+— the last new in the 2022 revision, which is consistent with a
+configuration-baseline control having no 2013 ancestor. The ids stand as
+written and `identifiers_checked` now says so. Worth noting the shape of
+this: a claim marked unverified rather than assumed is a claim somebody
+can later close, and this one was closed the same day. Nothing else was
+added: COBIT and NIST mappings reuse ids already verified in D-016.
 
 The continuous mode deliberately gains nothing. A baseline observed only
 at the snapshot has no history to reduce, so `as_of` emits no `configs`
